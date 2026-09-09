@@ -1,0 +1,32 @@
+FROM docker.io/library/postgres:18-bookworm
+
+# Installer envsubst (pour le script de génération)
+RUN apt-get update && apt-get install -y gettext
+
+# Définir les options d'initdb pour utiliser la locale française
+ENV POSTGRES_INITDB_ARGS="--encoding=UTF8 --locale=fr_FR.utf8 --lc-collate=fr_FR.utf8 --lc-ctype=fr_FR.utf8"
+
+# Créer le répertoire pour les scripts d'initialisation
+WORKDIR /docker-entrypoint-initdb.d
+
+# Copier les fichiers
+COPY src/database/init/00_generate_models.sh .
+COPY src/database/init/*.sql.pattern .
+COPY src/database/init/04_secure_hba.sh .
+COPY src/database/init/05_secure_conf.sh .
+COPY src/database/init/99_cleanup.sh .
+
+RUN chmod +x 00_generate_models.sh 04_secure_hba.sh 05_secure_conf.sh 99_cleanup.sh \
+    && chown -R postgres:postgres /docker-entrypoint-initdb.d
+
+# Copier le fichier .env dans un emplacement temporaire
+COPY src/database/.env.postgres /tmp/.env
+
+# Exécuter le script de génération avant le démarrage
+RUN set -a && \
+    . /tmp/.env && \
+    set +a && \
+    ./00_generate_models.sh && \
+    chmod 644 *.sql && \
+    rm 00_generate_models.sh *.pattern && \
+    ls -la

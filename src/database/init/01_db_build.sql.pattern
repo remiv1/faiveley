@@ -1,0 +1,30 @@
+-- Créer les deux bases de données
+CREATE DATABASE ${POSTGRES_DB_MAIN};
+CREATE DATABASE ${POSTGRES_DB_USERS};
+
+-- Créer les rôles/utilisateurs (premier démarrage)
+CREATE ROLE ${POSTGRES_USER_APP} LOGIN PASSWORD '${POSTGRES_PASSWORD_APP}';
+CREATE ROLE ${POSTGRES_USER_SECURE} LOGIN PASSWORD '${POSTGRES_PASSWORD_SECURE}';
+CREATE ROLE ${POSTGRES_USER_MIGR} LOGIN PASSWORD '${POSTGRES_PASSWORD_MIGR}';
+
+-- Connecter à la base users
+\c ${POSTGRES_DB_USERS}
+
+-- Créer le schéma auth
+CREATE SCHEMA IF NOT EXISTS auth_schema;
+CREATE SCHEMA IF NOT EXISTS migr_users;
+ALTER SCHEMA migr_users OWNER TO ${POSTGRES_USER_MIGR};
+
+-- Définir le search_path par défaut pour la base users
+ALTER DATABASE ${POSTGRES_DB_USERS} SET search_path TO auth_schema,public;
+
+-- Connecter à la base main
+\c ${POSTGRES_DB_MAIN}
+
+-- Créer le schéma app
+CREATE SCHEMA IF NOT EXISTS app_schema;
+CREATE SCHEMA IF NOT EXISTS migr_main;
+ALTER SCHEMA migr_main OWNER TO ${POSTGRES_USER_MIGR};
+
+-- Définir le search_path par défaut pour la base main
+ALTER DATABASE ${POSTGRES_DB_MAIN} SET search_path TO app_schema,public;
