@@ -1,17 +1,17 @@
 services:
   db-main:
-    container_name: fav-db
+    container_name: faiv-db
     build:
       context: .
       dockerfile: src/database/dockerfile.postgres
     env_file:
       - src/database/.env.postgres
     networks:
-      - fav-network
-      - fav-secure
-      - fav-migrations
+      - faiv-network
+      - faiv-secure
+      - faiv-migrations
     volumes:
-      - fav-db-data:/var/lib/postgresql
+      - faiv-db-data:/var/lib/postgresql
     restart: on-failure:5
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-postgres} -h localhost -p 5432 || exit 1"]
@@ -21,13 +21,13 @@ services:
       start_period: 30s
 
 volumes:
-  fav-db-data:
+  faiv-db-data:
     driver: local
 
 networks:
-  fav-network:
+  faiv-network:
     driver: bridge
-  fav-secure:
+  faiv-secure:
     driver: bridge
-  fav-migrations:
+  faiv-migrations:
     driver: bridge

@@ -1,0 +1,10 @@
+FROM python:3.14-slim
+
+WORKDIR /app
+
+# Installer les dépendances
+COPY migration/requirements.migr.txt .
+RUN pip install --no-cache-dir -r requirements.migr.txt
+
+# Définir le point d'entrée pour Alembic
+CMD ["alembic"]
