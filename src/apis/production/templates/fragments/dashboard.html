@@ -1,0 +1,139 @@
+<section id="feedback" class="feedback" aria-live="polite">
+  {% if message %}
+  <div class="message" role="status">{{ message }}</div>
+  {% endif %}
+</section>
+
+<div class="summary-bar">
+  <div class="summary-card">
+    <span>Pièces / h</span>
+    <strong>{{ pieces_count }}</strong>
+  </div>
+  <div class="summary-card">
+    <span>Rebuts du poste</span>
+    <strong>{{ rejects_count }}</strong>
+  </div>
+  <div class="summary-card">
+    <span>Arrêts du poste</span>
+    <strong>{{ stops_count }}</strong>
+  </div>
+  <div class="summary-card">
+    <span>Appro en cours</span>
+    <strong>{{ supply_count }}</strong>
+  </div>
+</div>
+
+<div class="action-grid">
+  <form class="action-form" method="post" action="{{ url_for('production.record_pieces') }}" hx-post="{{ url_for('production.record_pieces') }}" hx-target="#dashboard" hx-swap="innerHTML">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="id_post" value="{{ post.id }}">
+    <label for="pieces-quantity">Pièces</label>
+    <input id="pieces-quantity" type="number" name="quantity" min="1" value="1" required>
+    <button type="submit">Enregistrer</button>
+  </form>
+
+  <form class="action-form" method="post" action="{{ url_for('production.record_rejects') }}" hx-post="{{ url_for('production.record_rejects') }}" hx-target="#dashboard" hx-swap="innerHTML">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="id_post" value="{{ post.id }}">
+    <label for="rejects-quantity">Rebuts</label>
+    <input id="rejects-quantity" type="number" name="quantity" min="1" value="1" required>
+    <label for="rejects-cause">Cause du rebut</label>
+    <input id="rejects-cause" type="text" name="cause" placeholder="Cause" required>
+    <button type="submit">Valider</button>
+  </form>
+
+  <form class="action-form" method="post" action="{{ url_for('production.record_stop') }}" hx-post="{{ url_for('production.record_stop') }}" hx-target="#dashboard" hx-swap="innerHTML">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="id_post" value="{{ post.id }}">
+    <label>Arrêt</label>
+    <label for="stop-start">Début</label>
+    <input id="stop-start" type="datetime-local" name="start_datetime" required>
+    <label for="stop-end">Fin</label>
+    <input id="stop-end" type="datetime-local" name="end_datetime" required>
+    <label for="stop-cause">Cause de l'arrêt</label>
+    <input id="stop-cause" type="text" name="cause" placeholder="Cause" required>
+    <button type="submit">Signaler</button>
+  </form>
+
+  <a class="action-card action-link" href="{{ url_for('production.supplies', id_post=post.id) }}">
+    <strong>{{ supply_count }}</strong>
+    <span>Appro matériel en cours</span>
+  </a>
+</div>
+
+<div class="info-row">
+  <div class="post-column">
+    <section class="panel">
+      <h2>Poste</h2>
+      <ul>
+        <li>Presse : {{ post.press_ref }}</li>
+        <li>OF : {{ post.ordre_fabrication.code }}</li>
+        <li>Opérateur : {{ post.employee.first_name }} {{ post.employee.last_name }}</li>
+      </ul>
+    </section>
+
+    <section class="panel operations-panel">
+      <h2>Opérations en cours</h2>
+      {% if operations %}
+      <div class="operations-table-wrapper">
+        <table class="operations-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Motif</th>
+              <th>Statut</th>
+              <th>Créée le</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for operation in operations %}
+            <tr>
+              <td>{{ operation.type }}</td>
+              <td>{{ operation.reason }}</td>
+              <td><span class="operation-status">{{ operation.status }}</span></td>
+              <td>{{ operation.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="empty-state">Aucune opération en cours.</p>
+      {% endif %}
+    </section>
+  </div>
+
+  <section class="panel">
+    <h2>Actions rapides</h2>
+    <div class="quick-actions">
+      <form method="post" action="{{ url_for('production.request_quality_support') }}" hx-post="{{ url_for('production.request_quality_support') }}" hx-target="#dashboard" hx-swap="innerHTML">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="id_post" value="{{ post.id }}">
+        <label for="quality-reason">Motif qualité</label>
+        <input id="quality-reason" type="text" name="reason" placeholder="Support qualité" required>
+        <button type="submit">Qualité</button>
+      </form>
+      <form method="post" action="{{ url_for('production.request_logistics_support') }}" hx-post="{{ url_for('production.request_logistics_support') }}" hx-target="#dashboard" hx-swap="innerHTML">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="id_post" value="{{ post.id }}">
+        <label for="logistics-reason">Motif logistique</label>
+        <input id="logistics-reason" type="text" name="reason" placeholder="Support logistique" required>
+        <button type="submit">Logistique</button>
+      </form>
+      <form method="post" action="{{ url_for('production.request_quality_maintenance') }}" hx-post="{{ url_for('production.request_quality_maintenance') }}" hx-target="#dashboard" hx-swap="innerHTML">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="id_post" value="{{ post.id }}">
+        <label for="maintenance-quality-reason">Motif maintenance qualité</label>
+        <input id="maintenance-quality-reason" type="text" name="reason" placeholder="Maintenance qualité" required>
+        <button type="submit">Maint. qualité</button>
+      </form>
+      <form method="post" action="{{ url_for('production.request_technical_maintenance') }}" hx-post="{{ url_for('production.request_technical_maintenance') }}" hx-target="#dashboard" hx-swap="innerHTML">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="id_post" value="{{ post.id }}">
+        <label for="maintenance-technical-reason">Motif maintenance technique</label>
+        <input id="maintenance-technical-reason" type="text" name="reason" placeholder="Maintenance technique" required>
+        <button type="submit">Maint. technique</button>
+      </form>
+    </div>
+  </section>
+</div>

@@ -20,6 +20,132 @@ services:
       retries: 5
       start_period: 30s
 
+  production:
+    container_name: faiv-production
+    build:
+      context: .
+      dockerfile: src/apis/production/dockerfile.prod
+    env_file:
+      - src/database/.env.postgres
+    environment:
+      FLASK_SECRET_KEY: ${FLASK_SECRET_KEY:?FLASK_SECRET_KEY doit être définie}
+      POSTGRES_HOST: db-main
+      POSTGRES_PORT: 5432
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-2}
+      GUNICORN_THREADS: ${GUNICORN_THREADS:-4}
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-30}
+      GUNICORN_MAX_REQUESTS: ${GUNICORN_MAX_REQUESTS:-1000}
+      GUNICORN_MAX_REQUESTS_JITTER: ${GUNICORN_MAX_REQUESTS_JITTER:-100}
+    depends_on:
+      db-main:
+        condition: service_healthy
+    networks:
+      - faiv-network
+    restart: on-failure:5
+    ports:
+      - "8000:8000"
+
+  manutention:
+    container_name: faiv-manutention
+    build:
+      context: .
+      dockerfile: src/apis/manutention/dockerfile.manut
+    env_file:
+      - src/database/.env.postgres
+    environment:
+      FLASK_SECRET_KEY: ${FLASK_SECRET_KEY:?FLASK_SECRET_KEY doit être définie}
+      POSTGRES_HOST: db-main
+      POSTGRES_PORT: 5432
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-2}
+      GUNICORN_THREADS: ${GUNICORN_THREADS:-4}
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-30}
+      GUNICORN_MAX_REQUESTS: ${GUNICORN_MAX_REQUESTS:-1000}
+      GUNICORN_MAX_REQUESTS_JITTER: ${GUNICORN_MAX_REQUESTS_JITTER:-100}
+    depends_on:
+      db-main:
+        condition: service_healthy
+    networks:
+      - faiv-network
+    restart: on-failure:5
+    ports:
+      - "8001:8000"
+
+  techniciens:
+    container_name: faiv-techniciens
+    build:
+      context: .
+      dockerfile: src/apis/technicians/dockerfile.tech
+    env_file:
+      - src/database/.env.postgres
+    environment:
+      FLASK_SECRET_KEY: ${FLASK_SECRET_KEY:?FLASK_SECRET_KEY doit être définie}
+      POSTGRES_HOST: db-main
+      POSTGRES_PORT: 5432
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-2}
+      GUNICORN_THREADS: ${GUNICORN_THREADS:-4}
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-30}
+      GUNICORN_MAX_REQUESTS: ${GUNICORN_MAX_REQUESTS:-1000}
+      GUNICORN_MAX_REQUESTS_JITTER: ${GUNICORN_MAX_REQUESTS_JITTER:-100}
+    depends_on:
+      db-main:
+        condition: service_healthy
+    networks:
+      - faiv-network
+    restart: on-failure:5
+    ports:
+      - "8002:8000"
+
+  qualite:
+    container_name: faiv-qualite
+    build:
+      context: .
+      dockerfile: src/apis/quality/dockerfile.quality
+    env_file:
+      - src/database/.env.postgres
+    environment:
+      FLASK_SECRET_KEY: ${FLASK_SECRET_KEY:?FLASK_SECRET_KEY doit être définie}
+      POSTGRES_HOST: db-main
+      POSTGRES_PORT: 5432
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-2}
+      GUNICORN_THREADS: ${GUNICORN_THREADS:-4}
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-30}
+      GUNICORN_MAX_REQUESTS: ${GUNICORN_MAX_REQUESTS:-1000}
+      GUNICORN_MAX_REQUESTS_JITTER: ${GUNICORN_MAX_REQUESTS_JITTER:-100}
+    depends_on:
+      db-main:
+        condition: service_healthy
+    networks:
+      - faiv-network
+    restart: on-failure:5
+    ports:
+      - "8003:8000"
+
+  dashboard:
+    container_name: faiv-dashboard
+    build:
+      context: .
+      dockerfile: src/apis/dashbord/dockerfile.dashboard
+    env_file:
+      - src/database/.env.postgres
+    environment:
+      FLASK_SECRET_KEY: ${FLASK_SECRET_KEY:?FLASK_SECRET_KEY doit être définie}
+      POSTGRES_HOST: db-main
+      POSTGRES_PORT: 5432
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-2}
+      GUNICORN_THREADS: ${GUNICORN_THREADS:-4}
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-30}
+      GUNICORN_MAX_REQUESTS: ${GUNICORN_MAX_REQUESTS:-1000}
+      GUNICORN_MAX_REQUESTS_JITTER: ${GUNICORN_MAX_REQUESTS_JITTER:-100}
+    depends_on:
+      db-main:
+        condition: service_healthy
+    networks:
+      - faiv-network
+      - faiv-secure
+    restart: on-failure:5
+    ports:
+      - "8004:8000"
+
 volumes:
   faiv-db-data:
     driver: local

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Supervision{% endblock %}
+{% block content %}
+<header class="page-header"><div><p class="eyebrow">SUPERVISION</p><h1>Atelier en direct</h1><p>Situation des machines, OF et postes en cours.</p></div></header>
+<section class="machine-grid">
+{% for entry in entries %}
+  <article class="machine-card {% if entry.order %}running{% else %}idle{% endif %}">
+    <header><div><p class="machine-name">{{ entry.machine.name }}</p><p class="machine-description">{{ entry.machine.description or 'Sans description' }}</p></div><span class="state">{{ 'EN PRODUCTION' if entry.order else 'SANS OF ACTIVE' }}</span></header>
+    {% if entry.order %}
+    <div class="order-line"><strong>{{ entry.order.code }}</strong><span>{{ entry.order.articles.name }}</span></div>
+    <dl class="metrics"><div><dt>Bonnes pièces</dt><dd>{{ entry.goods }}</dd></div><div><dt>Rebuts</dt><dd>{{ entry.rejects }}</dd></div><div><dt>Cadence cible</dt><dd>{{ entry.order.capacities or '—' }}</dd></div></dl>
+    <p class="post-line">{% if entry.post %}Poste {{ entry.post.press_ref }} · {{ entry.post.employee.full_name() }}{% else %}Aucun poste actif{% endif %}</p>
+    {% else %}<p class="empty-state">Aucun ordre de fabrication actif pour cette machine.</p>{% endif %}
+  </article>
+{% else %}<p class="empty-state">Aucune machine n’est encore référencée.</p>{% endfor %}
+</section>
+{% endblock %}

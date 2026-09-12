@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ service.title }}</title>
+    <script
+        src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js"
+        integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V"
+        crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='field.css') }}">
+    <script>
+        document.addEventListener("htmx:configRequest", function (event) {
+            event.detail.headers["X-CSRFToken"] = "{{ csrf_token() }}";
+        });
+    </script>
+</head>
+<body>
+    <header class="topbar">
+        <div>
+            <p class="eyebrow">FAIVELEYTECH</p>
+            <h1>{{ service.title }}</h1>
+        </div>
+        <form method="post" action="{{ url_for(service.name + '.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="quiet" type="submit">
+                Déconnexion
+            </button>
+        </form>
+    </header>
+    <main>
+        <p class="identity">{{ employee.full_name() }}</p>
+        <section
+            id="requests"
+            hx-get="{{ url_for(service.name + '.request_list') }}"
+            hx-trigger="load, every 5s"
+            hx-swap="outerHTML"
+            aria-live="polite">
+        </section>
+    </main>
+</body>
+</html>

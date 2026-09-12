@@ -1,0 +1,24 @@
+<section id="requests" role="tabpanel" aria-labelledby="supply-tab" hx-get="{{ url_for('manutention.requests_fragment') }}" hx-trigger="every 5s" hx-swap="outerHTML" aria-live="polite">
+  {% if message %}<p class="message" role="status">{{ message }}</p>{% endif %}
+  <div class="section-title"><h2>Demandes actives</h2><span>{{ supply_requests | length }}</span></div>
+  {% for supply_request in supply_requests %}
+  <article class="request priority-{{ supply_request.priority.value | lower }}">
+    <div class="request-heading">
+      <span class="priority">{{ supply_request.priority.value }}</span>
+      <span class="status">{{ supply_request.status.value }}</span>
+    </div>
+    <h3>{{ supply_request.material.ref }} · {{ supply_request.material.name }}</h3>
+    <p>Presse {{ supply_request.post.press_ref }}</p>
+    <p class="date">Créée le {{ supply_request.created_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+    {% if supply_request.status.value == 'OPEN' %}
+    <button hx-post="{{ url_for('manutention.take_in_charge', request_id=supply_request.id) }}" hx-target="#requests" hx-swap="outerHTML">Prendre en charge</button>
+    {% elif supply_request.id_handler_employee == employee.id %}
+    <button hx-post="{{ url_for('manutention.resolve', request_id=supply_request.id) }}" hx-target="#requests" hx-swap="outerHTML">Marquer comme résolue</button>
+    {% else %}
+    <p class="assigned">Prise en charge par un collègue</p>
+    {% endif %}
+  </article>
+  {% else %}
+  <p class="empty">Aucune demande active.</p>
+  {% endfor %}
+</section>

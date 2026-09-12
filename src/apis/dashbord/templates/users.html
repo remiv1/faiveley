@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}
+    Utilisateurs
+{% endblock %}
+{% block content %}
+    <header class="page-header action-header">
+        <div>
+            <p class="eyebrow">ADMINISTRATION</p>
+            <h1>Utilisateurs et rôles</h1>
+            <p>{{ users | length }} compte{{ 's' if users | length != 1 else '' }}</p>
+        </div>
+        <a class="button" href="{{ url_for('dashboard.user_form') }}">
+            Créer un compte
+        </a>
+    </header>
+    <section class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Identifiant</th>
+                    <th>Email</th>
+                    <th>Rôles</th>
+                    <th>État</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td><strong>{{ user.username }}</strong></td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% for code, label in roles if code in user.permissions %}
+                                <span class="badge">{{ label }}</span>
+                            {% endfor %}
+                        </td>
+                        <td>{{ 'Verrouillé' if user.is_locked else ('Actif' if user.is_active else 'Désactivé') }}</td>
+                        <td class="row-actions">
+                            <a href="{{ url_for('dashboard.user_form', user_id=user.id) }}">Modifier</a>
+                            <form method="post" action="{{ url_for('dashboard.revoke_user_sessions', user_id=user.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button class="link" type="submit">Révoquer sessions</button>
+                            </form>
+                            <form method="post" action="{{ url_for('dashboard.delete_user', user_id=user.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button class="link danger" type="submit">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="empty-state">Aucun compte utilisateur.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

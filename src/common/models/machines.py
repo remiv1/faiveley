@@ -62,8 +62,29 @@ class Machines(WorkingBase, QueryMixin):
         JSONB,
         nullable=True,
     )
-    ordre_fabrication: Mapped["OrdreFabrication"] = relationship(
+    ordre_fabrication: Mapped[list["OrdreFabrication"]] = relationship(
         "OrdreFabrication",
-        uselist=False,
         back_populates="machine",
     )
+
+    def __repr__(self) -> str:
+        return (f"<Machines(id={self.id}, " +
+               f"name={self.name}, " +
+               f"description={self.description}, " +
+               f"date_creation={self.date_creation}, " +
+               f"date_modification={self.date_modification}, " +
+               f"location={self.location}, " +
+               f"machine_meta={self.machine_meta})>"
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        """Retourne un dictionnaire représentant la machine."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "date_creation": self.date_creation,
+            "date_modification": self.date_modification,
+            "location": self.location,
+            "machine_meta": self.machine_meta,
+        }

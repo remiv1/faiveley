@@ -1,0 +1,24 @@
+{% if supply_requests %}
+<div class="request-list">
+  {% for supply_request in supply_requests %}
+  <article class="supply-request priority-{{ supply_request.priority.value | lower }}">
+    <div class="supply-heading">
+      <strong>{{ supply_request.material.ref }}</strong>
+      <span class="priority-badge">{{ supply_request.priority.value }}</span>
+    </div>
+    <p>{{ supply_request.material.name }}</p>
+    <div class="request-meta">
+      <span>{{ supply_request.status.value }}</span>
+      <form method="post" action="{{ url_for('production.escalate_supply_request') }}" hx-post="{{ url_for('production.escalate_supply_request') }}" hx-target="#request-list" hx-swap="innerHTML">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="id_post" value="{{ post.id }}">
+        <input type="hidden" name="id_request" value="{{ supply_request.id }}">
+        <button type="submit">Escalader</button>
+      </form>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty-state">Aucune demande en cours.</p>
+{% endif %}

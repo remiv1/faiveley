@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="65cm" height="43cm" viewBox="68 -227 1286 858" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <rect style="fill: #fffffb" x="69" y="59" width="410.4" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="69" y="59" width="410.4" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="274.2" y="80.1035">Articles</text>
+    <rect style="fill: #fffffb" x="69" y="87" width="410.4" height="148"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="69" y="87" width="410.4" height="148"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="71.5" y="102.683">+id: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="71.5" y="118.683">+name: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="71.5" y="134.683">+description: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="71.5" y="150.683">+client: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="71.5" y="166.683">+product: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="71.5" y="182.683">+date_creation: datetime</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="71.5" y="198.683">+date_modification: datetime</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="71.5" y="214.683">+article_meta: jsonb</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="71.5" y="230.683">+ordre_fabrication: relationship["OrdreFabrication"]</text>
+    <rect style="fill: #fffffb" x="69" y="235" width="410.4" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="69" y="235" width="410.4" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="71.5" y="250.683">+to_dict(): dict[str, Any]</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="71.5" y="266.683"> __repr__(): str</text>
+  </g>
+  <g>
+    <rect style="fill: #fffffb" x="70" y="-226" width="279.5" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="70" y="-226" width="279.5" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="209.75" y="-204.896">Employee</text>
+    <rect style="fill: #fffffb" x="70" y="-198" width="279.5" height="196"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="70" y="-198" width="279.5" height="196"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="-182.317">+id: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="-166.317">+first_name: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="-150.317">+last_name: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="-134.317">+email: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="-118.317">+is_manager: bool</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="-102.317">+phone: str, optional</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="-86.3172">+hire_date: datetime, optional</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="-70.3172">+quit_date: datetime, optional</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="-54.3172">+job_title: enum[JobTitleEnum]</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="-38.3172">+department: enum[DepartementEnum]</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="-22.3172">+manager_id: int, optional</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="-6.31719">+manager: relationship["Employees"]</text>
+    <rect style="fill: #fffffb" x="70" y="-2" width="279.5" height="52"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="70" y="-2" width="279.5" height="52"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="13.6828"> __repr__(): str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="29.6828">+full_name(): str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="45.6828">+to_dict(): dict[str, Any]</text>
+  </g>
+  <g>
+    <rect style="fill: #fffffb" x="70" y="434" width="410.4" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="70" y="434" width="410.4" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="275.2" y="455.104">Machines</text>
+    <rect style="fill: #fffffb" x="70" y="462" width="410.4" height="132"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="70" y="462" width="410.4" height="132"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="477.683">+id: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="493.683">+name: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="509.683">+description: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="525.683">+date_creation: datetime</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="541.683">+date_modification: datetime</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="557.683">+location: jsonb</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="573.683">+machine_meta: jsonb</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="589.683">+ordre_fabrication: relationship["OrdreFabrication"]</text>
+    <rect style="fill: #fffffb" x="70" y="594" width="410.4" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="70" y="594" width="410.4" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="609.683"> __repr__(): str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="72.5" y="625.683">+to_dict(): dict[str, Any]</text>
+  </g>
+  <g>
+    <rect style="fill: #fffffb" x="542" y="499" width="210.2" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="542" y="499" width="210.2" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="647.1" y="520.104">Materials</text>
+    <rect style="fill: #fffffb" x="542" y="527" width="210.2" height="68"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="542" y="527" width="210.2" height="68"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="544.5" y="542.683">+id: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="544.5" y="558.683">+name: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="544.5" y="574.683">+ref: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="544.5" y="590.683">+description: str</text>
+    <rect style="fill: #fffffb" x="542" y="595" width="210.2" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="542" y="595" width="210.2" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="544.5" y="610.683"> __repr__(): str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="544.5" y="626.683">+to_dict(): dict[str, Any]</text>
+  </g>
+  <g>
+    <rect style="fill: #fffffb" x="816" y="483" width="140.9" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="816" y="483" width="140.9" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="886.45" y="504.104">MaterialOF</text>
+    <rect style="fill: #fffffb" x="816" y="511" width="140.9" height="52"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="816" y="511" width="140.9" height="52"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="818.5" y="526.683">+id: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="818.5" y="542.683">+id_material: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="818.5" y="558.683">+id_of: int</text>
+    <rect style="fill: #fffffb" x="816" y="563" width="140.9" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="816" y="563" width="140.9" height="8"/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 20 4 4 4 4 4; stroke: #0000ff" points="811.528,537 796,537 796,537 756.672,537 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="803.764,542 813.764,537 803.764,532 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="764.436,532 754.436,537 764.436,542 "/>
+  </g>
+  <g>
+    <rect style="fill: #fffffb" x="602" y="88" width="341.1" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="602" y="88" width="341.1" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="772.55" y="109.104">OrdreFabrication</text>
+    <rect style="fill: #fffffb" x="602" y="116" width="341.1" height="196"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="602" y="116" width="341.1" height="196"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="131.683">+id: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="147.683">+id_article: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="163.683">+id_machine: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="179.683">+code: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="195.683">+capacities: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="211.683">+date_creation: datetime</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="227.683">+date_modification: datetime</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="243.683">+of_meta: jsonb</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="259.683">+machine: relationship["Machines"]</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="275.683">+articles: relationship["Articles"]</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="291.683">+materials: relationship[list["Materials"]]</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="307.683">+posts: relationship["Posts"]</text>
+    <rect style="fill: #fffffb" x="602" y="312" width="341.1" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="602" y="312" width="341.1" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="327.683"> __repr__(): str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="604.5" y="343.683">+to_dict(): dict[str, Any]</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 20 4 4 4 4 4; stroke: #0000ff" points="947.572,126 992,126 992,553 961.372,553 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="955.336,121 945.336,126 955.336,131 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="969.136,548 959.136,553 969.136,558 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 20 4 4 4 4 4; stroke: #0000ff" points="597.528,142 530,142 530,73 483.872,73 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="589.764,147 599.764,142 589.764,137 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="491.636,68 481.636,73 491.636,78 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 20 4 4 4 4 4; stroke: #0000ff" points="597.528,158 546.1,158 546.1,472 484.872,472 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="589.764,163 599.764,158 589.764,153 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="492.636,467 482.636,472 492.636,477 "/>
+  </g>
+  <g>
+    <rect style="fill: #fffffb" x="584" y="-220.5" width="410.4" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="584" y="-220.5" width="410.4" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="789.2" y="-199.396">Posts</text>
+    <rect style="fill: #fffffb" x="584" y="-192.5" width="410.4" height="180"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="584" y="-192.5" width="410.4" height="180"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="-176.817">+id: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="-160.817">+id_employee: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="-144.817">+id_manager: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="-128.817">+id_of: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="-112.817">+start_datetime: datetime</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="-96.8172">+end_datetime: datetime</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="-80.8172">+created_at: datetime</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="-64.8172">+updated_at: datetime</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="-48.8172">+employee: relationship["Employees"]</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="-32.8172">+manager: relationship["Employees"]</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="-16.8172">+ordre_fabrication: relationship["OrdreFabrication"]</text>
+    <rect style="fill: #fffffb" x="584" y="-12.5" width="410.4" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="584" y="-12.5" width="410.4" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="3.18281"> __repr__(): str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="586.5" y="19.1828">+to_dict(): dict[str, Any]</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 20 4 4 4 4 4; stroke: #0000ff" points="353.972,-188 520,-188 520,-166.5 579.528,-166.5 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="361.736,-193 351.736,-188 361.736,-183 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="571.764,-161.5 581.764,-166.5 571.764,-171.5 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 20 4 4 4 4 4; stroke: #0000ff" points="353.972,-188 495,-188 495,-150.5 579.528,-150.5 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="361.736,-193 351.736,-188 361.736,-183 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="571.764,-145.5 581.764,-150.5 571.764,-155.5 "/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 20 4 4 4 4 4; stroke: #0000ff" points="597.528,126 547,126 547,-134.5 579.528,-134.5 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="589.764,131 599.764,126 589.764,121 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="571.764,-129.5 581.764,-134.5 571.764,-139.5 "/>
+  </g>
+  <g>
+    <rect style="fill: #fffffb" x="1077" y="-221.5" width="140.9" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="1077" y="-221.5" width="140.9" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1147.45" y="-200.396">PostHours</text>
+    <rect style="fill: #fffffb" x="1077" y="-193.5" width="140.9" height="100"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="1077" y="-193.5" width="140.9" height="100"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1079.5" y="-177.817">+id: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1079.5" y="-161.817">+id_post: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1079.5" y="-145.817">+capacities: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1079.5" y="-129.817">+qty_goods: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1079.5" y="-113.817">+qty_bads: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1079.5" y="-97.8172">+bads_meta: jsonb</text>
+    <rect style="fill: #fffffb" x="1077" y="-93.5" width="140.9" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="1077" y="-93.5" width="140.9" height="8"/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 20 4 4 4 4 4; stroke: #0000ff" points="998.872,-182.5 1042,-182.5 1042,-167.5 1072.53,-167.5 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="1006.64,-187.5 996.636,-182.5 1006.64,-177.5 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="1064.76,-162.5 1074.76,-167.5 1064.76,-172.5 "/>
+  </g>
+  <g>
+    <rect style="fill: #fffffb" x="1078" y="-78.5" width="202.5" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="1078" y="-78.5" width="202.5" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1179.25" y="-57.3965">PostStops</text>
+    <rect style="fill: #fffffb" x="1078" y="-50.5" width="202.5" height="100"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="1078" y="-50.5" width="202.5" height="100"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="-34.8172">+id: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="-18.8172">+id_post: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="-2.81719">+stop_code: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="13.1828">+stop_cause: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="29.1828">+start_datetime: datetime</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="45.1828">+stop_datetime: datetime</text>
+    <rect style="fill: #fffffb" x="1078" y="49.5" width="202.5" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="1078" y="49.5" width="202.5" height="8"/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 20 4 4 4 4 4; stroke: #0000ff" points="998.872,-182.5 1038,-182.5 1038,-24.5 1073.53,-24.5 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="1006.64,-187.5 996.636,-182.5 1006.64,-177.5 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="1065.76,-19.5 1075.76,-24.5 1065.76,-29.5 "/>
+  </g>
+  <g>
+    <rect style="fill: #fffffb" x="1078" y="67.5" width="256.4" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="1078" y="67.5" width="256.4" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1206.2" y="88.6035">Controls</text>
+    <rect style="fill: #fffffb" x="1078" y="95.5" width="256.4" height="100"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="1078" y="95.5" width="256.4" height="100"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="111.183">+id: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="127.183">+id_post: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="143.183">+spec: bool, optional</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="159.183">+panopli_listing: bool, optional</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="175.183">+panoplies: bool, optional</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="191.183">+gabarits: bool, optional</text>
+    <rect style="fill: #fffffb" x="1078" y="195.5" width="256.4" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="1078" y="195.5" width="256.4" height="8"/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 20 4 4 4 4 4; stroke: #0000ff" points="998.872,-182.5 1033,-182.5 1033,121.5 1073.53,121.5 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="1006.64,-187.5 996.636,-182.5 1006.64,-177.5 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="1065.76,126.5 1075.76,121.5 1065.76,116.5 "/>
+  </g>
+  <g>
+    <rect style="fill: #fffffb" x="1078" y="220.5" width="164" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="1078" y="220.5" width="164" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="1160" y="241.604">ControlItems</text>
+    <rect style="fill: #fffffb" x="1078" y="248.5" width="164" height="84"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="1078" y="248.5" width="164" height="84"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="264.183">+id: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="280.183">+id_control: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="296.183">+ref_colis: str</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="312.183">+view_control: enum</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1080.5" y="328.183">+scale_control: enum</text>
+    <rect style="fill: #fffffb" x="1078" y="332.5" width="164" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #1b2a41" x="1078" y="332.5" width="164" height="8"/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 20 4 4 4 4 4; stroke: #0000ff" points="1338.87,105.5 1353,105.5 1353,274.5 1246.47,274.5 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="1346.64,100.5 1336.64,105.5 1346.64,110.5 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #0000ff" points="1254.24,269.5 1244.24,274.5 1254.24,279.5 "/>
+  </g>
+</svg>

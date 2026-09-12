@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Gestion{% endblock %} | FaiveleyTech</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="{{ url_for('dashboard.home') }}">FAIVELEYTECH<span>Gestion</span></a>
+    <nav aria-label="Navigation principale">
+      <a href="{{ url_for('dashboard.home') }}">Vue d'ensemble</a>
+      <p class="nav-label">Exploitation</p>
+      <a href="{{ url_for('dashboard.entity_list', entity='machines') }}">Machines</a>
+      <a href="{{ url_for('dashboard.entity_list', entity='ofs') }}">Ordres de fabrication</a>
+      <a href="{{ url_for('dashboard.entity_list', entity='posts') }}">Postes</a>
+      <p class="nav-label">Référentiels</p>
+      <a href="{{ url_for('dashboard.entity_list', entity='articles') }}">Articles</a>
+      <a href="{{ url_for('dashboard.entity_list', entity='materiels') }}">Matériels</a>
+      <a href="{{ url_for('dashboard.entity_list', entity='personnels') }}">Personnels</a>
+      {% if '1' in g.current_user.permissions or '9' in g.current_user.permissions %}<a href="{{ url_for('dashboard.user_list') }}">Utilisateurs et rôles</a>{% endif %}
+    </nav>
+    <form method="post" action="{{ url_for('dashboard.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="logout" type="submit">Déconnexion</button></form>
+  </aside>
+  <main class="content">{% block content %}{% endblock %}</main>
+</body>
+</html>

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<header class="page-header action-header">
+    <div>
+        <p class="eyebrow">
+            RÉFÉRENTIEL
+        </p>
+        <h1>
+            {{ title }}
+        </h1>
+        <p>
+            {{ items | length }} élément{{ 's' if items | length != 1 else '' }}
+        </p>
+    </div>
+    <a class="button" href="{{ url_for('dashboard.entity_create', entity=entity) }}">
+        Créer
+    </a>
+</header>
+<section class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                {% if entity == 'machines' %}
+                <th>Machine</th>
+                <th>Description</th>
+                {% elif entity == 'articles' %}
+                <th>Article</th>
+                <th>Client</th>
+                <th>Produit</th>
+                {% elif entity == 'materiels' %}
+                <th>Référence</th>
+                <th>Matériel</th>
+                <th>Description</th>
+                {% elif entity == 'personnels' %}
+                <th>Nom</th>
+                <th>Métier</th>
+                <th>Département</th>
+                <th>Manager</th>
+                {% elif entity == 'ofs' %}
+                <th>OF</th>
+                <th>Machine</th>
+                <th>Article</th>
+                <th>Statut</th>
+                {% else %}
+                <th>Presse</th>
+                <th>OF</th>
+                <th>Opérateur</th>
+                <th>Début</th>
+                {% endif %}
+                <th aria-label="Actions"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                {% if entity == 'machines' %}
+                <td><strong>{{ item.name }}</strong></td>
+                <td>{{ item.description or '—' }}</td>
+                {% elif entity == 'articles' %}
+                <td><strong>{{ item.name }}</strong></td>
+                <td>{{ item.client or '—' }}</td>
+                <td>{{ item.product or '—' }}</td>
+                {% elif entity == 'materiels' %}
+                <td><strong>{{ item.ref }}</strong></td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.description or '—' }}</td>
+                {% elif entity == 'personnels' %}
+                <td><strong>{{ item.full_name() }}</strong><small>{{ item.email }}</small></td>
+                <td>{{ item.job_title.value }}</td>
+                <td>{{ item.department.value }}</td>
+                <td>{{ item.manager.full_name() if item.manager else '—' }}</td>
+                {% elif entity == 'ofs' %}
+                <td><strong>{{ item.code }}</strong></td>
+                <td>{{ item.machine.name }}</td>
+                <td>{{ item.articles.name }}</td>
+                <td><span class="badge {{ item.status.value | lower }}">{{ item.status.value }}</span></td>
+                {% else %}
+                <td><strong>{{ item.press_ref }}</strong></td>
+                <td>{{ item.ordre_fabrication.code }}</td>
+                <td>{{ item.employee.full_name() }}</td>
+                <td>{{ item.start_datetime.strftime('%d/%m/%Y %H:%M') }}</td>
+                {% endif %}
+                <td class="row-actions">
+                    <a href="{{ url_for('dashboard.entity_edit', entity=entity, item_id=item.id) }}">Modifier</a>
+                    <form method="post" action="{{ url_for('dashboard.entity_delete', entity=entity, item_id=item.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="link danger" type="submit">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="empty-state">Aucun élément dans ce référentiel.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

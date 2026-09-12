@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ 'Modifier' if user else 'Créer' }} un utilisateur
+{% endblock %}
+{% block content %}
+<header class="page-header">
+    <p class="eyebrow">ADMINISTRATION</p>
+    <h1>{{ 'Modifier' if user else 'Créer' }} un utilisateur</h1>
+</header>
+<form method="post" class="form-grid">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>
+        Identifiant
+        <input name="username" value="{{ user.username if user else '' }}" required>
+    </label>
+    <label>
+        Email
+        <input name="email" type="email" value="{{ user.email if user else '' }}" required>
+    </label>
+    <label class="full">
+        Employé associé
+        <select name="employee_id">
+            <option value="">Aucun</option>
+            {% for employee in employees %}
+                <option value="{{ employee.id }}" {% if user and employee.auth_user_id == user.id %}selected{% endif %}>{{ employee.full_name() }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label class="full">
+        {{ 'Nouveau mot de passe (facultatif)' if user else 'Mot de passe initial' }}
+        <input name="password" type="password" {% if not user %}required{% endif %}>
+    </label>
+    <fieldset class="full">
+        <legend>Rôles</legend>
+        {% for code, label in roles %}
+            <label class="check">
+                <input name="permissions" type="checkbox" value="{{ code }}" {% if user and code in user.permissions %}checked{% endif %}> {{ label }}
+            </label>
+        {% endfor %}
+    </fieldset>
+    <label class="check">
+        <input name="is_active" type="checkbox" {% if not user or user.is_active %}checked{% endif %}> Compte actif
+    </label>
+    <label class="check">
+        <input name="is_locked" type="checkbox" {% if user and user.is_locked %}checked{% endif %}> Compte verrouillé
+    </label>
+    <div class="form-actions full">
+        <a href="{{ url_for('dashboard.user_list') }}">Annuler</a>
+        <button type="submit">Enregistrer</button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,37 @@
+<section id="requests" aria-live="polite">
+    {% if message %}
+    <p class="message" role="status">
+        {{ message }}
+    </p>
+    {% endif %}
+    <div class="section-title">
+        <h2>
+            Demandes actives
+        </h2>
+        <span>
+            {{ active_requests | length }}
+        </span>
+    </div>
+    {% for domain_request in active_requests %}
+    <article class="request">
+        <div class="request-heading">
+            <span class="status">{{ domain_request.status.value }}</span>
+            {% if domain_request.request_type is defined %}
+            <span class="type">{{ domain_request.request_type }}</span>
+            {% endif %}
+        </div>
+        <h3>Presse {{ domain_request.post.press_ref }}</h3>
+        <p>{{ domain_request.reason }}</p>
+        <p class="date">Créée le {{ domain_request.created_at.strftime('%d/%m/%Y à %H:%M') }}</p>
+        {% if domain_request.status.value == 'OPEN' %}
+        <button hx-post="{{ url_for(service.name + '.take_in_charge', request_id=domain_request.id) }}" hx-target="#requests" hx-swap="outerHTML">Prendre en charge</button>
+        {% elif domain_request.id_handler_employee == employee.id %}
+        <button hx-post="{{ url_for(service.name + '.resolve', request_id=domain_request.id) }}" hx-target="#requests" hx-swap="outerHTML">Marquer comme résolue</button>
+        {% else %}
+        <p class="assigned">Prise en charge par un collègue</p>
+        {% endif %}
+    </article>
+    {% else %}
+    <p class="empty">Aucune demande active.</p>
+    {% endfor %}
+</section>

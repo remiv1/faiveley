@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Approvisionnement {{ post.press_ref }}</title>
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('production.static', filename='console.css') }}">
+  <script>
+    document.addEventListener("htmx:configRequest", function (event) {
+      event.detail.headers["X-CSRFToken"] = "{{ csrf_token() }}";
+    });
+  </script>
+</head>
+<body>
+  <div class="production-console">
+    <div class="console-shell">
+      <header class="console-header">
+        <div>
+          <p class="eyebrow">FaiveleyTech Production</p>
+          <h1>Approvisionnement</h1>
+        </div>
+        <div class="header-meta">
+          <span class="of-tag">Presse {{ post.press_ref }}</span>
+          <a class="status-chip active" href="{{ url_for('production.home', press_ref=post.press_ref) }}">Retour console</a>
+        </div>
+      </header>
+
+      <main class="console-main">
+        <section id="feedback" class="feedback" aria-live="polite"></section>
+
+        <div class="supply-layout">
+          <section class="panel">
+            <h2>Matériaux OF</h2>
+            {% if materials %}
+            <div class="material-list">
+              {% for material in materials %}
+              <form
+                class="material-form"
+                method="post"
+                action="{{ url_for('production.create_supply_request') }}"
+                hx-post="{{ url_for('production.create_supply_request') }}"
+                hx-target="#request-list"
+                hx-swap="innerHTML">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="id_post" value="{{ post.id }}">
+                <input type="hidden" name="id_material" value="{{ material.id }}">
+                <div class="material-info">
+                  <strong>{{ material.ref }}</strong>
+                  <span>{{ material.name }}</span>
+                </div>
+                <button type="submit">Demander</button>
+              </form>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="empty-state">Aucun matériel rattaché à cet OF.</p>
+            {% endif %}
+          </section>
+
+          <section class="panel">
+            <h2>Demandes actives</h2>
+            <div id="request-list">
+              {% include 'fragments/supply_requests.html' %}
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

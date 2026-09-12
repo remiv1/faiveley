@@ -1,0 +1,19 @@
+FROM python:3.14-slim
+
+RUN addgroup --system application \
+    && adduser --system --ingroup application --home /app application
+
+WORKDIR /app
+
+COPY src/apis/quality/requirements.quality.txt /app/requirements.quality.txt
+RUN pip install --no-cache-dir -r /app/requirements.quality.txt
+
+COPY --chown=application:application src /app
+
+ENV PYTHONPATH=/app
+
+USER application
+
+EXPOSE 8000
+
+CMD ["sh", "-c", "exec gunicorn apis.quality.main:app --bind 0.0.0.0:8000 --worker-class gthread --workers ${GUNICORN_WORKERS:-2} --threads ${GUNICORN_THREADS:-4} --timeout ${GUNICORN_TIMEOUT:-30} --max-requests ${GUNICORN_MAX_REQUESTS:-1000} --max-requests-jitter ${GUNICORN_MAX_REQUESTS_JITTER:-100}"]

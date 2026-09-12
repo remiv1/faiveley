@@ -1,28 +1,35 @@
-"""Modèle de données pour les matériaux.
+"""Modèle de données pour le matériel.
 
 Contient :
-    - la classe Material représentant un matériau avec ses attributs et relations.
-    - la classe MaterialOF représentant la relation entre un matériau et un ordre de fabrication.
+    - la classe Materials représentant le matériel avec ses attributs et relations.
+    - la classe MaterialOF représentant la relation entre le matériel et un ordre de fabrication.
 
 """
-from sqlalchemy import Integer, String, ForeignKey
-from sqlalchemy.orm import mapped_column, Mapped
+from typing import TYPE_CHECKING, Any
+
+from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .. import WorkingBase
 from .common import QueryMixin
 
-class Material(WorkingBase, QueryMixin):
+if TYPE_CHECKING:
+    from .ordre_fabrication import OrdreFabrication
+    from .production import SupplyRequest
+
+
+class Materials(WorkingBase, QueryMixin):
     """
-    Modèle de données pour les matériaux.
+    Modèle de données pour le matériel.
 
     Arguments:
         id (int): Identifiant unique du matériel.
-        name (str): Nom du matériau.
-        ref (str): Référence du matériau.
-        description (str): Description du matériau.
+        name (str): Nom du matériel.
+        ref (str): Référence du matériel.
+        description (str): Description du matériel.
     """
     __tablename__ = "materials"
-    __mapper_args__ = {
+    __table_args__ = {
         "schema": "app_schema"
     }
 
@@ -43,19 +50,45 @@ class Material(WorkingBase, QueryMixin):
         String,
         nullable=True,
     )
+    ordre_fabrication: Mapped[list["OrdreFabrication"]] = relationship(
+        "OrdreFabrication",
+        secondary="app_schema.materials_of",
+        back_populates="materials",
+    )
+    supply_requests: Mapped[list["SupplyRequest"]] = relationship(
+        "SupplyRequest",
+        back_populates="material",
+    )
+
+    def __repr__(self) -> str:
+        return f"<Materials(id={self.id}, name={self.name})>"
+
+    def to_dict(self) -> dict[str, Any]:
+        """
+        Convertit l'objet Materials en dictionnaire.
+
+        Retourne :
+            dict[str, Any]: Dictionnaire contenant les attributs du matériel.
+        """
+        return {
+            "id": self.id,
+            "name": self.name,
+            "ref": self.ref,
+            "description": self.description,
+        }
 
 
-class MaterialOF(WorkingBase, QueryMixin):
+class MaterialOF(WorkingBase, QueryMixin):  # pylint: disable=R0903
     """
-    Modèle de données pour la relation entre un matériau et un ordre de fabrication.
+    Modèle de données pour la relation entre le matériel et un ordre de fabrication.
 
     Arguments:
         id (int): Identifiant unique de la relation.
-        id_material (int): Identifiant du matériau.
+        id_material (int): Identifiant du matériel.
         id_of (int): Identifiant de l'ordre de fabrication.
     """
     __tablename__ = "materials_of"
-    __mapper_args__ = {
+    __table_args__ = {
         "schema": "app_schema"
     }
 
@@ -71,6 +104,6 @@ class MaterialOF(WorkingBase, QueryMixin):
     )
     id_of: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey("app_schema.of.id"),
+        ForeignKey("app_schema.ordre_fabrication.id"),
         nullable=False,
     )

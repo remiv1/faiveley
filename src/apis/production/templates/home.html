@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Production {{ post.press_ref }}</title>
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('production.static', filename='console.css') }}">
+  <script>
+    document.addEventListener("htmx:configRequest", function (event) {
+      event.detail.headers["X-CSRFToken"] = "{{ csrf_token() }}";
+    });
+  </script>
+</head>
+<body>
+  <div class="production-console">
+    <div class="console-shell">
+      <header class="console-header">
+        <div>
+          <p class="eyebrow">FaiveleyTech Production</p>
+          <h1>Presse {{ post.press_ref }}</h1>
+        </div>
+        <div class="header-meta">
+          <span class="of-tag">OF {{ post.ordre_fabrication.code }}</span>
+          <span class="status-chip {{ 'active' if checked else 'locked' }}">{{ 'Opérateur validé' if checked else 'En attente' }}</span>
+        </div>
+      </header>
+
+      <main class="console-main">
+        {% if not checked %}
+        <section id="feedback" class="feedback" aria-live="polite"></section>
+        <div class="operator-lock">
+          <div class="operator-panel">
+            <p>Validez l’identité de l’opérateur pour accéder au poste.</p>
+            <form class="operator-form" method="post" action="{{ url_for('production.check_operator') }}" hx-post="{{ url_for('production.check_operator') }}" hx-target="body" hx-swap="outerHTML">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="id_post" value="{{ post.id }}">
+              <label for="operator-code">Code opérateur</label>
+              <input id="operator-code" name="code" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="0000" required>
+              <button type="submit">Valider la présence</button>
+            </form>
+          </div>
+        </div>
+        {% else %}
+        <div id="dashboard" class="dashboard">
+          {% include 'fragments/dashboard.html' %}
+        </div>
+        {% endif %}
+      </main>
+    </div>
+  </div>
+</body>
+</html>

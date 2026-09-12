@@ -1,131 +1,241 @@
 #!/bin/bash
 
-# filepath: scripts/run-migrations.sh
-
-set -e
+set -euo pipefail
 
 NETWORK="faiveley_faiv-migrations"
 IMAGE="faiveley-migrations"
-
-# Obtenir le répertoire racine du projet
 PROJECT_ROOT="/app"
 HOST_PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# Vérifier le paramètre
-if [ -z "$1" ] || [ -z "$2" ]; then
-    echo "❌ Erreur: Vous devez spécifier 'main' ou 'users' + le nom à donner à la migration"
-    echo "Usage: $0 [main|users] <migration_name>"
-    exit 1
-fi
+usage() {
+    cat <<'EOF'
+Usage: ./src/migration/run-migrations.sh <option>
 
-DB_TYPE="$1"
-MIGRATION_NAME="$2"
+Options:
+  --generate  Génère une migration Alembic depuis les modèles SQLAlchemy.
+  --run-dry   Génère le SQL d'une mise à niveau dans un fichier, sans modifier la base.
+  --apply     Applique les migrations jusqu'à la révision choisie.
+  --help      Affiche cette aide.
+EOF
+}
 
-if [ "$DB_TYPE" != "main" ] && [ "$DB_TYPE" != "users" ]; then
-    echo "❌ Erreur: Le paramètre doit être 'main' ou 'users'"
-    exit 1
-fi
+select_databases() {
+    local selection
+    PS3="Choisissez les bases à traiter : "
+    select selection in "main" "users" "les deux" "annuler"; do
+        case "$selection" in
+            main)
+                DATABASES=("main")
+                return
+                ;;
+            users)
+                DATABASES=("users")
+                return
+                ;;
+            "les deux")
+                DATABASES=("main" "users")
+                return
+                ;;
+            annuler)
+                exit 0
+                ;;
+            *)
+                echo "Sélection invalide."
+                ;;
+        esac
+    done
+}
 
-# Chemin vers le fichier .env
-ENV_FILE="$PROJECT_ROOT/.env.migr"
-ENV_FILE_HOST="$HOST_PROJECT_ROOT/migration/.env.migr"
+configure_database() {
+    local database_type="$1"
 
-# Déterminer les variables spécifiques en fonction du type de base de données
-if [ "$DB_TYPE" = "main" ]; then
-    MIGRATION_DIR="$PROJECT_ROOT/main"
-    MIGRATION_DIR_HOST="$HOST_PROJECT_ROOT/migration/main"
-    DB_NAME_VAR="POSTGRES_DB_MAIN"
-    HOST_MIGRATION_VOLUME="$HOST_PROJECT_ROOT/migration/main:/app/main:z"
-else
-    MIGRATION_DIR="$PROJECT_ROOT/users"
-    MIGRATION_DIR_HOST="$HOST_PROJECT_ROOT/migration/users"
-    DB_NAME_VAR="POSTGRES_DB_USERS"
-    HOST_MIGRATION_VOLUME="$HOST_PROJECT_ROOT/migration/users:/app/users:z"
-fi
+    if [[ "$database_type" == "main" ]]; then
+        MIGRATION_DIR="$PROJECT_ROOT/main"
+        HOST_MIGRATION_DIR="$HOST_PROJECT_ROOT/migration/main"
+        DATABASE_NAME_VARIABLE="POSTGRES_DB_MAIN"
+    else
+        MIGRATION_DIR="$PROJECT_ROOT/users"
+        HOST_MIGRATION_DIR="$HOST_PROJECT_ROOT/migration/users"
+        DATABASE_NAME_VARIABLE="POSTGRES_DB_USERS"
+    fi
 
-# Vérifier que le fichier .env existe
-if [ ! -f "$ENV_FILE_HOST" ]; then
-    echo "❌ Erreur: Le fichier $ENV_FILE_HOST n'existe pas"
-    exit 1
-else
-    echo "📂 Utilisation du fichier d'environnement: $ENV_FILE"
-fi
+    if [[ ! -d "$HOST_MIGRATION_DIR" ]]; then
+        echo "Erreur : le répertoire $MIGRATION_DIR n'existe pas."
+        exit 1
+    fi
+}
 
-# Charger les variables d'environnement depuis le fichier .env
-set -a
-source "$ENV_FILE_HOST"
-set +a
-echo "✅ Variables d'environnement chargées depuis $ENV_FILE"
-echo "📋 Configuration:"
-echo "   POSTGRES_HOST=${POSTGRES_HOST}"
-echo "   POSTGRES_PORT=${POSTGRES_PORT}"
-echo "   POSTGRES_DB_MAIN=${POSTGRES_DB_MAIN}"
-echo "   POSTGRES_DB_USERS=${POSTGRES_DB_USERS}"
-echo "   POSTGRES_USER_MIGR: [REDACTED]"
-echo "   POSTGRES_PASSWORD: [REDACTED]"
-echo "   POSTGRES_PASSWORD_MIGR: [REDACTED]"
+load_environment() {
+    ENV_FILE_HOST="$HOST_PROJECT_ROOT/migration/.env.migr"
+    if [[ ! -f "$ENV_FILE_HOST" ]]; then
+        echo "Erreur : le fichier $ENV_FILE_HOST n'existe pas."
+        exit 1
+    fi
 
-# Vérifier que le répertoire de migrations existe
-if [ ! -d "$MIGRATION_DIR_HOST" ]; then
-    echo "❌ Erreur: Le répertoire $MIGRATION_DIR n'existe pas"
-    exit 1
-else
-    echo "📂 Utilisation du répertoire de migrations: $MIGRATION_DIR"
-fi
+    set -a
+    source "$ENV_FILE_HOST"
+    set +a
+    echo "Variables d'environnement chargées depuis $ENV_FILE_HOST."
+}
 
-# Vérifier que le réseau existe
-if ! podman network inspect $NETWORK > /dev/null 2>&1; then
-    echo "❌ Erreur: Le réseau $NETWORK n'existe pas"
-    exit 1
-else
-    echo "🔗 Utilisation du réseau Podman: $NETWORK"
-fi
+check_container_prerequisites() {
+    if ! podman network inspect "$NETWORK" > /dev/null 2>&1; then
+        echo "Erreur : le réseau Podman $NETWORK n'existe pas."
+        exit 1
+    fi
 
-# Vérifier que l'image existe
-if ! podman image inspect $IMAGE > /dev/null 2>&1; then
-    echo "🔨 Construction de l'image $IMAGE..."
-    podman build -f "$HOST_PROJECT_ROOT/migration/dockerfile.migr" -t $IMAGE "$HOST_PROJECT_ROOT"
-fi
+    if ! podman image inspect "$IMAGE" > /dev/null 2>&1; then
+        echo "Construction de l'image $IMAGE..."
+        podman build \
+            -f "$HOST_PROJECT_ROOT/migration/dockerfile.migr" \
+            -t "$IMAGE" \
+            "$HOST_PROJECT_ROOT"
+    fi
+}
 
-echo "🚀 Génération des migrations pour la base '$DB_TYPE'..."
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+run_alembic() {
+    local command="$1"
+    local output_file="${2:-}"
+    local migration_volume="$HOST_MIGRATION_DIR:$MIGRATION_DIR:z"
+    local output_volume=()
 
-# Lancer le conteneur avec les variables d'environnement du fichier .env
-echo "📦 Lancement du conteneur de migrations..."
+    if [[ -n "$output_file" ]]; then
+        output_volume=(-v "$HOST_MIGRATION_DIR/dry-runs:$MIGRATION_DIR/dry-runs:z")
+    fi
 
-podman run --rm \
-    --network $NETWORK \
-    -e "POSTGRES_HOST=${POSTGRES_HOST}" \
-    -e "POSTGRES_PORT=${POSTGRES_PORT}" \
-    -e "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}" \
-    -e "POSTGRES_USER_MIGR=${POSTGRES_USER_MIGR}" \
-    -e "POSTGRES_PASSWORD_MIGR=${POSTGRES_PASSWORD_MIGR}" \
-    -e "POSTGRES_DB_MAIN=${POSTGRES_DB_MAIN}" \
-    -e "POSTGRES_DB_USERS=${POSTGRES_DB_USERS}" \
-    -v "$HOST_MIGRATION_VOLUME" \
-    -v "$HOST_PROJECT_ROOT/common:/app/common:z" \
-    $IMAGE \
-    bash -c "
-        echo '          +———————————————————————————————————————+'
-        echo '          |         Début de la migration         |'
-        echo '          +———————————————————————————————————————+'
-        echo
-        echo '📂 Données SQLAlchemy...'
-        ls -l /app/db_models
-        alembic -c '$MIGRATION_DIR/alembic.ini' revision --autogenerate -m '$MIGRATION_NAME'
-        echo '📂 Migrations générées dans le répertoire:'
-        find /app -maxdepth 4 -type d -name versions
-        echo '📂 Contenu du répertoire de migrations:'
-        ls -al /app/$DB_TYPE/versions
-    "
+    podman run --rm \
+        --network "$NETWORK" \
+        -e "POSTGRES_HOST=${POSTGRES_HOST}" \
+        -e "POSTGRES_PORT=${POSTGRES_PORT}" \
+        -e "POSTGRES_USER_MIGR=${POSTGRES_USER_MIGR}" \
+        -e "POSTGRES_PASSWORD_MIGR=${POSTGRES_PASSWORD_MIGR}" \
+        -e "POSTGRES_DB_MAIN=${POSTGRES_DB_MAIN}" \
+        -e "POSTGRES_DB_USERS=${POSTGRES_DB_USERS}" \
+        -v "$migration_volume" \
+        -v "$HOST_PROJECT_ROOT/common:/app/common:z" \
+        "${output_volume[@]}" \
+        "$IMAGE" \
+        bash -c "alembic -c '$MIGRATION_DIR/alembic.ini' $command${output_file:+ > '$MIGRATION_DIR/dry-runs/$output_file'}"
+}
 
-EXIT_CODE=$?
+generate_migration() {
+    local database_type="$1"
+    local migration_name
 
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    configure_database "$database_type"
+    read -r -p "Nom de la migration pour $database_type : " migration_name
+    if [[ -z "$migration_name" ]]; then
+        echo "Erreur : le nom de migration est requis."
+        exit 1
+    fi
+    run_alembic "revision --autogenerate -m '$migration_name'"
+}
 
-if [ $EXIT_CODE -eq 0 ]; then
-    echo "✅ Migrations générées avec succès pour '$DB_TYPE'!"
-else
-    echo "❌ Erreur lors de la génération des migrations"
-    exit $EXIT_CODE
-fi
+generate_dry_run() {
+    local database_type="$1"
+    local timestamp
+    local output_file
+
+    configure_database "$database_type"
+    mkdir -p "$HOST_MIGRATION_DIR/dry-runs"
+    timestamp="$(date +%Y%m%d-%H%M%S)"
+    output_file="${timestamp}-upgrade-head.sql"
+    run_alembic "upgrade head --sql" "$output_file"
+    echo "SQL écrit dans $HOST_MIGRATION_DIR/dry-runs/$output_file."
+}
+
+select_revision() {
+    local database_type="$1"
+    local -a revisions=()
+    local revision
+    local selected_revision
+
+    configure_database "$database_type"
+    mapfile -t revisions < <(
+        podman run --rm \
+            --network "$NETWORK" \
+            -e "POSTGRES_HOST=${POSTGRES_HOST}" \
+            -e "POSTGRES_PORT=${POSTGRES_PORT}" \
+            -e "POSTGRES_USER_MIGR=${POSTGRES_USER_MIGR}" \
+            -e "POSTGRES_PASSWORD_MIGR=${POSTGRES_PASSWORD_MIGR}" \
+            -e "POSTGRES_DB_MAIN=${POSTGRES_DB_MAIN}" \
+            -e "POSTGRES_DB_USERS=${POSTGRES_DB_USERS}" \
+            -v "$HOST_MIGRATION_DIR:$MIGRATION_DIR:z" \
+            -v "$HOST_PROJECT_ROOT/common:/app/common:z" \
+            "$IMAGE" \
+            bash -c "alembic -c '$MIGRATION_DIR/alembic.ini' history --verbose" \
+            | awk '/^Rev: / { print $2 }'
+    )
+
+    if [[ ${#revisions[@]} -eq 0 ]]; then
+        echo "Erreur : aucune migration trouvée pour $database_type."
+        exit 1
+    fi
+
+    revisions=("${revisions[@]}" "head" "annuler")
+    PS3="Révision cible pour $database_type : "
+    select selected_revision in "${revisions[@]}"; do
+        case "$selected_revision" in
+            head)
+                SELECTED_REVISION="head"
+                return
+                ;;
+            annuler)
+                exit 0
+                ;;
+            "")
+                echo "Sélection invalide."
+                ;;
+            *)
+                SELECTED_REVISION="$selected_revision"
+                return
+                ;;
+        esac
+    done
+}
+
+apply_migrations() {
+    local database_type="$1"
+
+    select_revision "$database_type"
+    run_alembic "upgrade $SELECTED_REVISION"
+    echo "Migrations appliquées jusqu'à $SELECTED_REVISION pour $database_type."
+}
+
+main() {
+    local action="${1:---help}"
+
+    case "$action" in
+        --generate|--run-dry|--apply)
+            ;;
+        --help)
+            usage
+            exit 0
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+
+    load_environment
+    check_container_prerequisites
+    select_databases
+
+    local database_type
+    for database_type in "${DATABASES[@]}"; do
+        case "$action" in
+            --generate)
+                generate_migration "$database_type"
+                ;;
+            --run-dry)
+                generate_dry_run "$database_type"
+                ;;
+            --apply)
+                apply_migrations "$database_type"
+                ;;
+        esac
+    done
+}
+
+main "$@"

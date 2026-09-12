@@ -31,7 +31,7 @@ class Articles(WorkingBase, QueryMixin):
         date_modification (datetime): Date de dernière modification de l'article.
         article_meta (jsonb): Métadonnées supplémentaires de l'article.
     """
-    __tablename__ = 'article'
+    __tablename__ = 'articles'
     __table_args__ = {'schema': 'app_schema'}
 
     id: Mapped[int] = mapped_column(
@@ -71,6 +71,27 @@ class Articles(WorkingBase, QueryMixin):
 
     ordre_fabrication: Mapped["OrdreFabrication"] = relationship(
         "OrdreFabrication",
-        uselist=False,
-        back_populates="ordre_fabrication",
+        uselist=True,
+        back_populates="articles",
     )
+
+    def __repr__(self) -> str:
+        return f"<Articles(id={self.id}, name={self.name})>"
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Convertit l'objet Articles en dictionnaire.
+
+        Retourne :
+            Dict[str, Any]: Dictionnaire contenant les attributs de l'article.
+        """
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "client": self.client,
+            "product": self.product,
+            "date_creation": self.date_creation,
+            "date_modification": self.date_modification,
+            "article_meta": self.article_meta,
+        }

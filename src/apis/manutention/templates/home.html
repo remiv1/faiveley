@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manutention</title>
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  <script>
+    document.addEventListener("htmx:configRequest", function (event) {
+      event.detail.headers["X-CSRFToken"] = "{{ csrf_token() }}";
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div><p class="eyebrow">FAIVELEYTECH</p><h1>Manutention</h1></div>
+    <form method="post" action="{{ url_for('manutention.logout') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="quiet" type="submit">Déconnexion</button>
+    </form>
+  </header>
+  <main>
+    <p class="identity">{{ employee.full_name() }}</p>
+    <div class="request-tabs" role="tablist" aria-label="Files de demandes">
+      <button class="tab" id="supply-tab" type="button" role="tab" aria-controls="requests" aria-selected="true" data-requests-url="{{ url_for('manutention.requests_fragment') }}">Approvisionnement</button>
+      <button class="tab" id="logistics-tab" type="button" role="tab" aria-controls="requests" aria-selected="false" data-requests-url="{{ url_for('manutention.logistics_requests_fragment') }}">Support logistique</button>
+    </div>
+    <section id="requests" role="tabpanel" aria-labelledby="supply-tab" hx-get="{{ url_for('manutention.requests_fragment') }}" hx-trigger="load, every 5s" hx-swap="outerHTML" aria-live="polite"></section>
+  </main>
+  <script>
+    document.querySelectorAll(".tab").forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        document.querySelectorAll(".tab").forEach(function (candidate) {
+          candidate.setAttribute("aria-selected", "false");
+        });
+        tab.setAttribute("aria-selected", "true");
+        htmx.ajax("GET", tab.dataset.requestsUrl, {target: "#requests", swap: "outerHTML"});
+      });
+    });
+  </script>
+</body>
+</html>

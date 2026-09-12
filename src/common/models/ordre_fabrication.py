@@ -6,8 +6,9 @@
 
 from typing import Dict, Any, TYPE_CHECKING
 from datetime import datetime, timezone
+from enum import Enum
 
-from sqlalchemy import Integer, String, DateTime, ForeignKey
+from sqlalchemy import Enum as SQLEnum, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from sqlalchemy.dialects.postgresql import JSONB
@@ -18,6 +19,18 @@ from .common import QueryMixin
 if TYPE_CHECKING:
     from .machines import Machines
     from .articles import Articles
+    from .materials import Materials
+    from .posts import Posts
+
+
+class OrdreFabricationStatus(str, Enum):
+    """Statut du cycle de vie d'un ordre de fabrication."""
+
+    PLANNED = "PLANNED"
+    ACTIVE = "ACTIVE"
+    COMPLETED = "COMPLETED"
+    CANCELLED = "CANCELLED"
+
 
 class OrdreFabrication(WorkingBase, QueryMixin):
     """
@@ -43,7 +56,7 @@ class OrdreFabrication(WorkingBase, QueryMixin):
     )
     id_article: Mapped[int] = mapped_column(
         Integer,
-        ForeignKey('app_schema.article.id'),
+        ForeignKey('app_schema.articles.id'),
         nullable=False,
     )
     id_machine: Mapped[int] = mapped_column(
@@ -57,6 +70,19 @@ class OrdreFabrication(WorkingBase, QueryMixin):
     )
     capacities: Mapped[int] = mapped_column(
         Integer,
+        nullable=True,
+    )
+    status: Mapped[OrdreFabricationStatus] = mapped_column(
+        SQLEnum(OrdreFabricationStatus, name="ordre_fabrication_status_enum"),
+        nullable=False,
+        default=OrdreFabricationStatus.PLANNED,
+    )
+    started_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+    completed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
         nullable=True,
     )
     date_creation: Mapped[datetime] = mapped_column(
@@ -78,8 +104,41 @@ class OrdreFabrication(WorkingBase, QueryMixin):
         uselist=False,
         back_populates="ordre_fabrication",
     )
-    article: Mapped["Articles"] = relationship(
+    articles: Mapped["Articles"] = relationship(
         "Articles",
         uselist=False,
         back_populates="ordre_fabrication",
     )
+    materials: Mapped[list["Materials"]] = relationship(
+        "Materials",
+        secondary="app_schema.materials_of",
+        back_populates="ordre_fabrication",
+    )
+    posts: Mapped[list["Posts"]] = relationship(
+        "Posts",
+        back_populates="ordre_fabrication",
+    )
+
+    def __repr__(self) -> str:
+        return f"<OrdreFabrication(id={self.id}, code={self.code})>"
+
+    def to_dict(self) -> dict[str, Any]:
+        """
+        Convertit l'objet OrdreFabrication en dictionnaire.
+
+        Retourne :
+            dict[str, Any]: Dictionnaire contenant les attributs de l'ordre de fabrication.
+        """
+        return {
+            "id": self.id,
+            "id_article": self.id_article,
+            "id_machine": self.id_machine,
+            "code": self.code,
+            "capacities": self.capacities,
+            "status": self.status.value,
+            "started_at": self.started_at,
+            "completed_at": self.completed_at,
+            "date_creation": self.date_creation,
+            "date_modification": self.date_modification,
+            "of_meta": self.of_meta,
+        }
