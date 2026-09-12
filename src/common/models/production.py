@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from .materials import Materials
     from .posts import Posts
 
+POSTS_FK = "app_schema.posts.id"
 
 class CommentAuthorType(str, Enum):
     """Type d'auteur d'un commentaire de production."""
@@ -47,7 +48,7 @@ class ProductionComment(WorkingBase, QueryMixin):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     id_post: Mapped[int] = mapped_column(
-        ForeignKey("app_schema.posts.id"), nullable=False
+        ForeignKey(POSTS_FK), nullable=False
     )
     author_type: Mapped[CommentAuthorType] = mapped_column(
         SQLEnum(CommentAuthorType, name="comment_author_type_enum"), nullable=False
@@ -72,7 +73,7 @@ class SupplyRequest(WorkingBase, QueryMixin):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     id_post: Mapped[int] = mapped_column(
-        ForeignKey("app_schema.posts.id"), nullable=False
+        ForeignKey(POSTS_FK), nullable=False
     )
     id_material: Mapped[int] = mapped_column(
         ForeignKey("app_schema.materials.id"), nullable=False
@@ -121,7 +122,7 @@ class PostRequest(WorkingBase, QueryMixin):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     id_post: Mapped[int] = mapped_column(
-        ForeignKey("app_schema.posts.id"), nullable=False
+        ForeignKey(POSTS_FK), nullable=False
     )
     reason: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[RequestStatus] = mapped_column(
