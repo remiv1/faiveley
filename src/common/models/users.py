@@ -23,6 +23,9 @@ INFORMATIQUE = "6"
 RH = "7"
 DIRECTION = "8"
 SUPER_ADMIN = "9"
+MANUTENTION = "m"
+TECHNICIENS = "t"
+QUALITE = "q"
 
 
 class Users(SecureBase, QueryMixin):
@@ -66,10 +69,11 @@ class Users(SecureBase, QueryMixin):
         default=False,
         comment="Compte de l'utilisateur verrouillé ?",
     )
-    # La gestion des droits se fait par une chaine de caractères avec des nombres accolés
+    # La gestion des droits se fait par une chaine de caractères avec des codes accolés.
     # Par exemple "1" admin, "2" comptable, "3" commercial, "4" logistique, "5" support,
-    # "6" informatique, "7" RH, "8" direction, "9" super admin
-    # Exemple : "13" pour un utilisateur qui est à la fois admin et commercial
+    # "6" informatique, "7" RH, "8" direction, "9" super admin, "m" manutention,
+    # "t" techniciens et "q" qualité. Exemple : "13m" pour un utilisateur administrateur,
+    # commercial et manutentionnaire.
     permissions: Mapped[str] = mapped_column(
         String, comment="Permissions de l'utilisateur"
     )
