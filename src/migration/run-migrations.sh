@@ -109,6 +109,7 @@ run_alembic() {
         -e "POSTGRES_PORT=${POSTGRES_PORT}" \
         -e "POSTGRES_USER_MIGR=${POSTGRES_USER_MIGR}" \
         -e "POSTGRES_PASSWORD_MIGR=${POSTGRES_PASSWORD_MIGR}" \
+        -e "POSTGRES_USER_APP=${POSTGRES_USER_APP}" \
         -e "POSTGRES_DB_MAIN=${POSTGRES_DB_MAIN}" \
         -e "POSTGRES_DB_USERS=${POSTGRES_DB_USERS}" \
         -v "$migration_volume" \

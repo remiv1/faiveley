@@ -15,6 +15,7 @@
             event.detail.headers["X-CSRFToken"] = "{{ csrf_token() }}";
         });
     </script>
+    <script defer src="{{ url_for('static', filename='field-refresh.js') }}"></script>
 </head>
 <body>
     <header class="topbar">
@@ -34,8 +35,9 @@
         <section
             id="requests"
             hx-get="{{ url_for(service.name + '.request_list') }}"
-            hx-trigger="load, every 5s"
+            hx-trigger="load"
             hx-swap="outerHTML"
+            data-requests-url="{{ url_for(service.name + '.request_list') }}"
             aria-live="polite">
         </section>
     </main>

@@ -1,4 +1,4 @@
-<section id="requests" role="tabpanel" aria-labelledby="supply-tab" hx-get="{{ url_for('manutention.requests_fragment') }}" hx-trigger="every 5s" hx-swap="outerHTML" aria-live="polite">
+<section id="requests" role="tabpanel" aria-labelledby="supply-tab" data-requests-url="{{ url_for('manutention.requests_fragment') }}" aria-live="polite">
   {% if message %}<p class="message" role="status">{{ message }}</p>{% endif %}
   <div class="section-title"><h2>Demandes actives</h2><span>{{ supply_requests | length }}</span></div>
   {% for supply_request in supply_requests %}

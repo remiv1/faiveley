@@ -94,3 +94,61 @@ Les requêtes `POST` doivent fournir le jeton CSRF de la session dans l'en-tête
 - `PostHours` contient un cumul par poste et par heure UTC, unique pour le couple `id_post` et `recorded_at`.
 - `ProductionComments` regroupe les commentaires opérateurs et techniciens avec `author_type`.
 - Les demandes d'approvisionnement sont liées au poste et au matériel demandé. L'API refuse un matériel qui n'est pas associé à l'OF du poste.
+
+## Situation actuelle du POC
+
+Le POC enregistre les données de production et les demandes dans PostgreSQL. Les écrans sont rendus par Flask et les actions utilisent HTMX pour recharger les fragments concernés.
+
+Les services de manutention, qualité et techniciens consultent les demandes enregistrées lorsqu'ils chargent ou actualisent leur écran. Le POC ne publie pas encore d'événement temps réel entre les services.
+
+## Solution retenue pour la production
+
+La production publiera les événements métier dans **Redis Streams** après l'enregistrement de la demande dans PostgreSQL. PostgreSQL restera la source de vérité et Redis servira uniquement à distribuer les notifications.
+
+Le flux cible est :
+
+```text
+POST de la console
+        |
+        +--> PostgreSQL : demande persistée
+        |
+        +--> Redis Stream : événement publié
+                |
+                +--> manutention
+                +--> qualité
+                +--> techniciens
+```
+
+Les événements concernés sont :
+
+- `supply_request.created` ;
+- `logistics_support_request.created` ;
+- `quality_support_request.created` ;
+- `maintenance_request.created` ;
+- `request.status_changed`.
+
+Un événement contiendra au minimum :
+
+```json
+{
+    "event_id": "uuid",
+    "event_type": "supply_request.created",
+    "occurred_at": "2026-09-14T10:30:00Z",
+    "request_id": "42",
+    "post_id": "7",
+    "press_ref": "PRESSE-01"
+}
+```
+
+Le message restera volontairement léger. Le service destinataire relira la
+demande complète dans PostgreSQL avant de l'afficher. La publication et la
+consommation devront être idempotentes afin de supporter les reconnexions et
+les reprises de messages.
+
+Le flux Redis cible sera `faiveley:production:events`. La configuration
+prévue est documentée par les variables `REDIS_URL` et `REDIS_STREAM`. Elle
+sera ajoutée au déploiement lors de l'implémentation de la solution de
+production.
+
+La diffusion vers les navigateurs pourra utiliser SSE au-dessus de cette
+distribution. Cette évolution n'est pas implémentée dans le POC actuel.

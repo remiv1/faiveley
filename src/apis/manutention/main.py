@@ -40,7 +40,12 @@ from common.models.users import MANUTENTION, Users, UsersPasswords, UserSession
 LOGIN_PAGE = "login.html"
 
 P = ParamSpec("P")
-manutention_blueprint = Blueprint("manutention", __name__, url_prefix="/manutention")
+manutention_blueprint = Blueprint(
+    "manutention",
+    __name__,
+    url_prefix="/manutention",
+    static_folder="static",
+)
 csrf = CSRFProtect()
 
 
@@ -359,7 +364,7 @@ def create_app(
     auth_database_url: str | None = None,
 ) -> Flask:
     """Crée l'application Flask de la file Manutention."""
-    flask_app = Flask(__name__)
+    flask_app = Flask(__name__, static_folder="../../common/static")
     flask_app.config["SESSION_COOKIE_NAME"] = "manutention_session"
     flask_app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY", "")
     if not flask_app.config["SECRET_KEY"]:

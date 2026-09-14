@@ -1,4 +1,7 @@
-<section id="requests" aria-live="polite">
+<section
+    id="requests"
+    data-requests-url="{{ url_for(service.name + '.request_list') }}"
+    aria-live="polite">
     {% if message %}
     <p class="message" role="status">
         {{ message }}

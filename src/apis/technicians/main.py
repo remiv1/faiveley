@@ -1,6 +1,6 @@
 """Point d'entrée de l'API Flask dédiée aux techniciens."""
 
-from apis.field_service import FieldServiceConfig, create_field_service_app
+from common.field_service import FieldServiceConfig, create_field_service_app
 from common.models.production import MaintenanceRequest
 from common.models.users import TECHNICIENS
 
