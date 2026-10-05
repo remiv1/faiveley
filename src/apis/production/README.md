@@ -59,9 +59,22 @@ Les écrans doivent être réactifs et fournir un retour immédiat à l'utilisat
 
 ## Configuration
 
-L'API est exposée sous le préfixe `/production`. Chaque console ouvre sa page avec
-`GET /production/<press_ref>`. Le serveur associe alors la session HTTP au poste actif
-dont `press_ref` correspond à l'URL.
+L'API est accessible via Nginx à `http://localhost:8110/production/` et n'expose
+plus de port hôte direct. L'entrée `/production/entree` efface l'ancienne session
+de console par un `POST` protégé par CSRF, puis affiche `/production/selection-presse`.
+Cette page propose les presses avec un poste actif. La sélection doit être suivie
+d'une nouvelle validation opérateur.
+
+Les liens `GET /production/<press_ref>` restent compatibles : le serveur associe
+la session HTTP au poste actif dont `press_ref` correspond à l'URL. Sans contexte
+valide, `/production/` redirige vers la sélection de presse.
+
+Le sélecteur d'environnement et `POST /production/deconnexion` effacent le contexte
+de console et la validation opérateur sans clôturer ni modifier le poste en base.
+Le changement efface aussi la session du service cible avant sa connexion.
+Le cookie `production_session` est limité au chemin `/production` ; il n'est pas
+partagé avec la gestion. Sa suppression reste locale, sans révocation serveur
+d'une éventuelle copie du cookie signé.
 
 Chaque requête métier transmet `id_post`. Le serveur refuse la requête si cet identifiant
 ne correspond pas à celui enregistré dans la session de la console.

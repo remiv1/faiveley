@@ -6,6 +6,7 @@
   <title>Production {{ post.press_ref }}</title>
   <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="{{ url_for('production.static', filename='console.css') }}">
+  <link rel="stylesheet" href="{{ url_for('environment_navigation.static', filename='environment-navigation.css') }}">
   <script>
     document.addEventListener("htmx:configRequest", function (event) {
       event.detail.headers["X-CSRFToken"] = "{{ csrf_token() }}";
@@ -15,7 +16,7 @@
 <body>
   <div class="production-console">
     <div class="console-shell">
-      <header class="console-header">
+      <header class="console-header environment-topbar">
         <div>
           <p class="eyebrow">FaiveleyTech Production</p>
           <h1>Presse {{ post.press_ref }}</h1>
@@ -23,6 +24,13 @@
         <div class="header-meta">
           <span class="of-tag">OF {{ post.ordre_fabrication.code }}</span>
           <span class="status-chip {{ 'active' if checked else 'locked' }}">{{ 'Opérateur validé' if checked else 'En attente' }}</span>
+        </div>
+        <div class="environment-actions">
+          {% include 'fragments/environment_selector.html' %}
+          <form method="post" action="{{ url_for('production.logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="environment-continue" type="submit">Déconnexion</button>
+          </form>
         </div>
       </header>
 

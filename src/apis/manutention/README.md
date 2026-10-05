@@ -1,5 +1,18 @@
 # API Manutention
 
+## Accès et changement d'environnement
+
+Accès via Nginx : `http://localhost:8110/manutention/entree`, puis connexion propre
+à la manutention. Le service n'expose plus de port hôte direct.
+
+Le sélecteur est disponible sur la connexion et la vue des demandes. Changer
+d'environnement révoque uniquement le jeton courant en base, supprime la session
+locale et réinitialise la session du service cible avant sa connexion.
+La déconnexion utilise la même révocation. Ces opérations sont des `POST`
+protégés par CSRF ; sans JavaScript, confirmer l'arrivée avec « Continuer ».
+Le cookie `manutention_session` est limité à `/manutention`. Les sessions d'autres
+appareils restent actives.
+
 ## Situation actuelle du POC
 
 L'application permet aux manutentionnaires authentifiés de consulter les demandes d'approvisionnement et de support logistique enregistrées dans PostgreSQL. Les demandes peuvent être prises en charge puis résolues depuis l'interface HTMX.

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Gestion | FaiveleyTech</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('environment_navigation.static', filename='environment-navigation.css') }}">
 </head>
 <body class="login-page">
     <main class="login-panel">
@@ -21,6 +22,9 @@
             {% endif %}
             <button type="submit">Ouvrir la session</button>
         </form>
+        <div class="environment-login-navigation">
+            {% include 'fragments/environment_selector.html' %}
+        </div>
     </main>
 </body>
 </html>

@@ -2,6 +2,20 @@
 
 Cette console permet de gérer les comptes administrateurs et les paramètres du POC FaiveleyTech.
 
+## Accès et changement d'environnement
+
+Accès via Nginx : `http://localhost:8110/gestion/entree`, puis connexion propre à
+la gestion. Le service n'expose plus de port hôte direct.
+
+Le sélecteur est disponible sur l'écran de connexion et dans la navigation.
+Changer d'environnement supprime la session locale puis réinitialise celle du
+service cible avant sa connexion, par des `POST` protégés par CSRF. Sans JavaScript,
+confirmer l'arrivée avec « Continuer ».
+
+Le cookie `dashboard_session` est limité au chemin `/gestion`. Le dashboard
+conserve son authentification par cookie Flask signé : supprimer le cookie du
+navigateur n'invalide pas côté serveur une copie précédemment récupérée.
+
 ## Génération du compte administrateur de démonstration
 
 Pour initialiser le compte administrateur de démonstration, exécutez le script `seed_admin.py` :

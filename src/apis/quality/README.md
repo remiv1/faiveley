@@ -1,5 +1,18 @@
 # API Qualité
 
+## Accès et changement d'environnement
+
+Accès via Nginx : `http://localhost:8110/qualite/entree`, puis connexion propre à
+la qualité. Le service n'expose plus de port hôte direct.
+
+Le sélecteur commun est présent sur la connexion et la vue des demandes.
+Changer d'environnement ou se déconnecter révoque le jeton courant en base et
+supprime la session locale. L'arrivée dans le service cible efface également son
+ancienne session avant la connexion. Ces opérations utilisent des `POST` protégés
+par CSRF, avec un bouton « Continuer » à l'arrivée si JavaScript est désactivé.
+Le cookie `qualite_session` est limité à `/qualite` ; les sessions d'autres
+appareils ne sont pas révoquées.
+
 ## Situation actuelle du POC
 
 L'application qualité utilise le socle commun de service terrain pour consulter et traiter les demandes de support qualité enregistrées dans PostgreSQL.

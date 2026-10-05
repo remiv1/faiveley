@@ -1,0 +1,15 @@
+<form class="environment-selector" method="post" action="{{ url_for('environment_navigation.change_environment') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="environment-destination">Environnement</label>
+    <div class="environment-selector-controls">
+        <select id="environment-destination" name="environment" required>
+            <option value="" selected disabled>{{ current_environment.title }}</option>
+            {% for environment in environments %}
+                {% if environment.name != current_environment.name %}
+                    <option value="{{ environment.name }}">{{ environment.title }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <button type="submit">Changer</button>
+    </div>
+</form>

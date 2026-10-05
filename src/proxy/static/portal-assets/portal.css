@@ -1,0 +1,62 @@
+:root {
+    --ink: #202a32;
+    --paper: #f4f6f7;
+    --line: #c5cdd3;
+    --accent: #007c83;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Georgia, serif;
+    letter-spacing: 0;
+}
+
+.portal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-bottom: 1px solid var(--line);
+    padding: 24px;
+    background: #fff;
+}
+
+.portal-brand { font-size: 1.1rem; font-weight: 700; }
+.portal-status { color: var(--accent); }
+
+main {
+    width: min(100%, 760px);
+    margin: 48px auto;
+    padding: 0 24px;
+}
+
+h1 { margin: 0 0 24px; font-size: 2rem; overflow-wrap: anywhere; }
+.environment-list { border-top: 1px solid var(--line); }
+
+.environment-list a {
+    display: grid;
+    grid-template-columns: minmax(140px, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    min-height: 76px;
+    border-bottom: 1px solid var(--line);
+    padding: 20px 12px;
+    color: var(--ink);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.environment-list a:hover { background: #e4eeee; }
+.environment-list a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.environment-type { font-size: 0.9rem; color: #52616b; }
+.mini-test-using { font-size: 0.8rem; color: #888; font-style: italic; }
+
+@media (max-width: 480px) {
+    main { margin: 28px auto; }
+    .environment-list a { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+}

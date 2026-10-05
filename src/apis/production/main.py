@@ -25,6 +25,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from flask_wtf.csrf import CSRFError, CSRFProtect  # type: ignore[import-untyped]
 from werkzeug import Response as WerkzeugResponse
 
+from common.environment_navigation import clear_environment_session, register_environment_navigation
 from common.models.materials import MaterialOF, Materials
 from common.models.posts import PostHours, PostStops, Posts
 from common.models.production import (
@@ -98,17 +99,53 @@ def _require_post_context(
     return decorator
 
 
+def _active_post(press_ref: str) -> Posts | None:
+    return _database_session().scalar(
+        select(Posts)
+        .where(Posts.press_ref == press_ref, Posts.end_datetime.is_(None))
+        .order_by(Posts.start_datetime.desc(), Posts.id.desc())
+    )
+
+
+@production_blueprint.route("/selection-presse", methods=("GET", "POST"))
+def select_press() -> ResponseReturnValue:
+    """Sélectionne une presse active sans clôturer ni modifier son poste."""
+    error = None
+    status = 200
+    if request.method == "POST":
+        post = _active_post(request.form.get("press_ref", "").strip())
+        if post is None:
+            error = "Cette presse n'a plus de poste actif. Sélectionnez une autre presse."
+            status = 409
+        else:
+            clear_environment_session()
+            session["id_post"] = post.id
+            session["press_ref"] = post.press_ref
+            session["operator_checked"] = False
+            return redirect(url_for("production.home"), code=303)
+    press_refs = _database_session().scalars(
+        select(Posts.press_ref)
+        .where(Posts.end_datetime.is_(None))
+        .distinct()
+        .order_by(Posts.press_ref)
+    ).all()
+    return render_template("press_selection.html", press_refs=press_refs, error=error), status
+
+
+@production_blueprint.post("/deconnexion")
+def logout() -> WerkzeugResponse:
+    """Efface le contexte de console sans clôturer le poste de production."""
+    clear_environment_session()
+    return redirect(url_for("production.select_press"), code=303)
+
+
 @production_blueprint.get("/")
 @production_blueprint.get("/<press_ref>")
-def home(press_ref: str | None = None) -> str:
+def home(press_ref: str | None = None) -> ResponseReturnValue:
     """Affiche la page d'accueil de la console de production pour une presse donnée."""
     database_session = _database_session()
     if press_ref is not None:
-        post = database_session.scalar(
-            select(Posts)
-            .where(Posts.press_ref == press_ref, Posts.end_datetime.is_(None))
-            .order_by(Posts.start_datetime.desc())
-        )
+        post = _active_post(press_ref)
         if post is None:
             _abort_message("Aucun poste actif ne correspond à cette presse.", 404)
         current_post_id = session.get("id_post")
@@ -120,8 +157,8 @@ def home(press_ref: str | None = None) -> str:
     else:
         post_id = session.get("id_post")
         post = database_session.get(Posts, post_id) if post_id else None
-        if post is None:
-            _abort_message("Cette console doit être initialisée avec sa référence presse.", 403)
+        if post is None or post.end_datetime is not None:
+            return redirect(url_for("production.select_press"))
     checked = session.get("operator_checked", False)
     dashboard_context = _dashboard_context(post) if checked else {}
     return render_template("home.html", post=post, checked=checked, **dashboard_context)
@@ -535,7 +572,7 @@ def _database_url(database_url: str | None) -> str | URL:
 
 def create_app(database_url: str | None = None) -> Flask:
     """Crée l'application Flask de l'API Production."""
-    flask_app = Flask(__name__)
+    flask_app = Flask(__name__, static_url_path="/production/assets")
     flask_app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY", "")
     if not flask_app.config["SECRET_KEY"]:
         raise RuntimeError("La variable d'environnement FLASK_SECRET_KEY est requise.")
@@ -559,6 +596,7 @@ def create_app(database_url: str | None = None) -> Flask:
     def service_root() -> WerkzeugResponse:
         return redirect(url_for("production.home"))
 
+    register_environment_navigation(flask_app, "production")
     return flask_app
 
 

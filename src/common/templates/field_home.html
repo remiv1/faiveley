@@ -10,6 +10,7 @@
         crossorigin="anonymous">
     </script>
     <link rel="stylesheet" href="{{ url_for('static', filename='field.css') }}">
+    <link rel="stylesheet" href="{{ url_for('environment_navigation.static', filename='environment-navigation.css') }}">
     <script>
         document.addEventListener("htmx:configRequest", function (event) {
             event.detail.headers["X-CSRFToken"] = "{{ csrf_token() }}";
@@ -18,17 +19,20 @@
     <script defer src="{{ url_for('static', filename='field-refresh.js') }}"></script>
 </head>
 <body>
-    <header class="topbar">
+    <header class="topbar environment-topbar">
         <div>
             <p class="eyebrow">FAIVELEYTECH</p>
             <h1>{{ service.title }}</h1>
         </div>
+        <div class="environment-actions">
+        {% include 'fragments/environment_selector.html' %}
         <form method="post" action="{{ url_for(service.name + '.logout') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button class="quiet" type="submit">
                 Déconnexion
             </button>
         </form>
+        </div>
     </header>
     <main>
         <p class="identity">{{ employee.full_name() }}</p>

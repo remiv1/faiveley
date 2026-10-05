@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Production | FaiveleyTech</title>
+  <link rel="stylesheet" href="{{ url_for('environment_navigation.static', filename='environment-navigation.css') }}">
+</head>
+<body class="environment-entry">
+  <main class="environment-entry-content">
+    <p class="environment-brand">FAIVELEYTECH</p>
+    <h1>Production</h1>
+    {% if error %}<p class="environment-error" role="alert">{{ error }}</p>{% endif %}
+    {% if press_refs %}
+      <form class="press-selection" method="post" action="{{ url_for('production.select_press') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="press-ref">Presse</label>
+        <select id="press-ref" name="press_ref" required>
+          <option value="" selected disabled>Sélectionner une presse</option>
+          {% for press_ref in press_refs %}<option value="{{ press_ref }}">{{ press_ref }}</option>{% endfor %}
+        </select>
+        <button class="environment-continue" type="submit">Ouvrir la console</button>
+      </form>
+    {% else %}
+      <p role="status">Aucune presse avec un poste actif.</p>
+    {% endif %}
+    <div class="environment-login-navigation">
+      {% include 'fragments/environment_selector.html' %}
+    </div>
+  </main>
+</body>
+</html>

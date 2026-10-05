@@ -28,6 +28,7 @@ from sqlalchemy.orm import Session, selectinload, sessionmaker
 from werkzeug import Response as WerkzeugResponse
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from common.environment_navigation import clear_environment_session, register_environment_navigation
 from common.models.articles import Articles
 from common.models.employees import DepartmentEnum, Employees, JobTitleEnum
 from common.models.machines import Machines
@@ -368,7 +369,7 @@ def login() -> ResponseReturnValue:
 @dashboard_blueprint.post("/deconnexion")
 def logout() -> WerkzeugResponse:
     """Ferme la session HTTP du portail Gestion."""
-    session.clear()
+    clear_environment_session()
     return redirect(url_for("dashboard.login"))
 
 
@@ -565,7 +566,7 @@ def create_app(
         secure_database_url: str | None = None,
     ) -> Flask:
     """Crée le portail de supervision et de gestion."""
-    flask_app = Flask(__name__)
+    flask_app = Flask(__name__, static_url_path="/gestion/static")
     flask_app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY", "")
     if not flask_app.config["SECRET_KEY"]:
         raise RuntimeError("La variable d'environnement FLASK_SECRET_KEY est requise.")
@@ -610,6 +611,7 @@ def create_app(
     def service_root() -> WerkzeugResponse:
         return redirect(url_for("dashboard.home"))
 
+    register_environment_navigation(flask_app, "dashboard")
     return flask_app
 
 

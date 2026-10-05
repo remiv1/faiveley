@@ -28,6 +28,7 @@ from sqlalchemy import case, create_engine, select
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import Session, selectinload, sessionmaker
 
+from common.environment_navigation import clear_environment_session, register_environment_navigation
 from common.models.employees import Employees
 from common.models.production import (
     LogisticsSupportRequest,
@@ -228,8 +229,8 @@ def _login_failure(user: Users | None) -> ResponseReturnValue:
 
 @manutention_blueprint.post("/deconnexion")
 def logout() -> WerkzeugResponse:
-    """Supprime la référence locale au jeton de session."""
-    session.clear()
+    """Révoque le jeton courant et supprime la session locale."""
+    clear_environment_session(current_app.extensions["auth_session_factory"])
     return redirect(url_for("manutention.login"))
 
 
@@ -364,7 +365,11 @@ def create_app(
     auth_database_url: str | None = None,
 ) -> Flask:
     """Crée l'application Flask de la file Manutention."""
-    flask_app = Flask(__name__, static_folder="../../common/static")
+    flask_app = Flask(
+        __name__,
+        static_folder="../../common/static",
+        static_url_path="/manutention/assets",
+    )
     flask_app.config["SESSION_COOKIE_NAME"] = "manutention_session"
     flask_app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY", "")
     if not flask_app.config["SECRET_KEY"]:
@@ -400,6 +405,7 @@ def create_app(
     def service_root() -> WerkzeugResponse:
         return redirect(url_for("manutention.home"))
 
+    register_environment_navigation(flask_app, "manutention")
     return flask_app
 
 

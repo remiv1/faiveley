@@ -29,6 +29,7 @@ from sqlalchemy.orm import Session, selectinload, sessionmaker
 from werkzeug import Response as WerkzeugResponse
 from werkzeug.security import check_password_hash
 
+from common.environment_navigation import clear_environment_session, register_environment_navigation
 from common.models.employees import Employees
 from common.models.production import PostRequest, RequestStatus
 from common.models.users import Users, UsersPasswords, UserSession
@@ -53,12 +54,18 @@ def create_field_service_app(
     auth_database_url: str | None = None,
 ) -> Flask:
     """Crée une application terrain traitant un type de demande donné."""
-    flask_app = Flask(__name__, template_folder="templates", static_folder="static")
+    flask_app = Flask(
+        __name__,
+        template_folder="templates",
+        static_folder="static",
+        static_url_path=f"/{config.name}/static",
+    )
     flask_app.config["SESSION_COOKIE_NAME"] = f"{config.name}_session"
     _configure_application(flask_app, main_database_url, auth_database_url)
     _register_error_handlers(flask_app)
     _register_routes(flask_app, config)
     _register_service_root(flask_app, config)
+    register_environment_navigation(flask_app, config.name)
     return flask_app
 
 
@@ -102,7 +109,7 @@ def _register_routes(flask_app: Flask, config: FieldServiceConfig) -> None:
 
     @blueprint.post("/deconnexion")
     def logout() -> WerkzeugResponse:
-        session.clear()
+        clear_environment_session(current_app.extensions["auth_session_factory"])
         return redirect(url_for(f"{config.name}.login"))
 
     @blueprint.get("/")

@@ -1,5 +1,18 @@
 # API Techniciens
 
+## Accès et changement d'environnement
+
+Accès via Nginx : `http://localhost:8110/techniciens/entree`, puis connexion propre
+aux techniciens. Le service n'expose plus de port hôte direct.
+
+Le sélecteur commun est présent sur la connexion et la vue des demandes.
+Changer d'environnement ou se déconnecter révoque le jeton courant en base et
+supprime la session locale. L'arrivée dans le service cible efface également son
+ancienne session avant la connexion. Ces opérations utilisent des `POST` protégés
+par CSRF, avec un bouton « Continuer » à l'arrivée si JavaScript est désactivé.
+Le cookie `techniciens_session` est limité à `/techniciens` ; les sessions d'autres
+appareils ne sont pas révoquées.
+
 ## Situation actuelle du POC
 
 L'application techniciens utilise le socle commun de service terrain pour consulter et traiter les demandes de maintenance enregistrées dans PostgreSQL. Elle distingue les demandes liées à une raison qualité de celles liées à une raison technique.

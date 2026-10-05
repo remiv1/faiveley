@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Manutention</title>
   <link rel="stylesheet" href="{{ url_for('manutention.static', filename='app.css') }}">
+  <link rel="stylesheet" href="{{ url_for('environment_navigation.static', filename='environment-navigation.css') }}">
 </head>
 <body class="login-page">
   <main class="login-panel">
@@ -19,6 +20,9 @@
       {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
       <button type="submit">Se connecter</button>
     </form>
+    <div class="environment-login-navigation">
+      {% include 'fragments/environment_selector.html' %}
+    </div>
   </main>
 </body>
 </html>
