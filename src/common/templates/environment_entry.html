@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ current_environment.title }} | FaiveleyTech</title>
+    <title>{{ current_environment.title }} | Plasturgie</title>
     <link rel="stylesheet" href="{{ url_for('environment_navigation.static', filename='environment-navigation.css') }}">
     <script defer src="{{ url_for('environment_navigation.static', filename='environment-entry.js') }}"></script>
 </head>
 <body class="environment-entry">
     <main class="environment-entry-content">
-        <p class="environment-brand">FAIVELEYTECH</p>
+        <p class="environment-brand">PLASTURGIE</p>
         <h1>{{ current_environment.title }}</h1>
         <form id="environment-entry-form" method="post" action="{{ url_for('environment_navigation.enter_environment') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

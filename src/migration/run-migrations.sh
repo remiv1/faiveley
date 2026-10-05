@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-NETWORK="faiveley_faiv-migrations"
-IMAGE="faiveley-migrations"
+NETWORK="plasturgie_plast-migrations"
+IMAGE="plasturgie-migrations"
 PROJECT_ROOT="/app"
 HOST_PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 

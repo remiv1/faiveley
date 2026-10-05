@@ -1,4 +1,4 @@
-# FaiveleyTech (POC)
+# Plasturgie (POC)
 
 This POC is edited to demonstrate at the C-Suite, the potential with changing processes in the production area.
 
@@ -112,11 +112,11 @@ Redis Streams
     +--> groupe techniciens
 ```
 
-Lorsqu'une demande est créée ou que son statut change, l'application publie un événement dans un flux Redis commun, par exemple `faiveley:production:events`. Les services concernés consomment ce flux avec leur propre groupe de consommateurs :
+Lorsqu'une demande est créée ou que son statut change, l'application publie un événement dans un flux Redis commun, par exemple `plasturgie:production:events`. Les services concernés consomment ce flux avec leur propre groupe de consommateurs :
 
-- `faiveley:manutention` ;
-- `faiveley:qualite` ;
-- `faiveley:techniciens`.
+- `plasturgie:manutention` ;
+- `plasturgie:qualite` ;
+- `plasturgie:techniciens`.
 
 Le message Redis contient un identifiant d'événement, son type, sa date, ainsi que l'identifiant de la demande et du poste. Le consommateur recharge ensuite la demande complète depuis PostgreSQL avant de l'afficher.
 
@@ -138,8 +138,8 @@ Redis sera ajouté au réseau interne Docker avec un volume persistant. Les serv
 
 ```text
 REDIS_URL=redis://redis:6379/0
-REDIS_STREAM=faiveley:production:events
-REDIS_CONSUMER_GROUP=faiveley:<service>
+REDIS_STREAM=plasturgie:production:events
+REDIS_CONSUMER_GROUP=plasturgie:<service>
 REDIS_CONSUMER_NAME=<hostname>
 ```
 

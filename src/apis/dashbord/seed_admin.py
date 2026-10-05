@@ -48,7 +48,7 @@ def main() -> None:
         if user is None:
             user = Users(
                 username="admin",
-                email="admin@faiveley.local",
+                email="admin@test.test",
                 permissions=f"{ADMIN}{DIRECTION}{SUPER_ADMIN}",
                 is_active=True,
                 is_locked=False,

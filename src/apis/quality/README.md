@@ -21,7 +21,7 @@ L'interface est rendue par Flask et actualisée avec HTMX. Le POC ne reçoit pas
 
 ## Solution retenue pour la production
 
-La production publiera les événements métier dans Redis Streams. Le service qualité consommera le flux `faiveley:production:events` avec le groupe `faiveley:qualite`.
+La production publiera les événements métier dans Redis Streams. Le service qualité consommera le flux `plasturgie:production:events` avec le groupe `plasturgie:qualite`.
 
 Les événements utiles sont notamment :
 

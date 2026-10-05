@@ -85,7 +85,7 @@ Les variables d'environnement suivantes sont obligatoires :
 - `POSTGRES_USER_APP`, `POSTGRES_PASSWORD_APP` et `POSTGRES_DB_MAIN` : paramètres de connexion à la base métier.
 
 Dans Compose, la connexion vise `db-main:5432`, le nom DNS interne du conteneur
-PostgreSQL sur le réseau `faiv-network`. L'API n'accède donc pas à PostgreSQL par le
+PostgreSQL sur le réseau `plast-network`. L'API n'accède donc pas à PostgreSQL par le
 port exposé de la machine hôte. `DATABASE_URL` peut être défini pour surcharger cette
 configuration dans un environnement de développement ou de test.
 
@@ -158,7 +158,7 @@ demande complète dans PostgreSQL avant de l'afficher. La publication et la
 consommation devront être idempotentes afin de supporter les reconnexions et
 les reprises de messages.
 
-Le flux Redis cible sera `faiveley:production:events`. La configuration
+Le flux Redis cible sera `plasturgie:production:events`. La configuration
 prévue est documentée par les variables `REDIS_URL` et `REDIS_STREAM`. Elle
 sera ajoutée au déploiement lors de l'implémentation de la solution de
 production.

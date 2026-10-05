@@ -29,9 +29,9 @@ Après le choix de l'action, le script charge les variables de `src/migration/.e
 
 ## Conteneur éphémère et réseau
 
-Le script exécute Alembic dans un conteneur Podman éphémère, supprimé après chaque commande par l'option `--rm`. Il utilise l'image `faiveley-migrations`. Si elle n'existe pas, le script la construit depuis `dockerfile.migr` et `requirements.migr.txt`.
+Le script exécute Alembic dans un conteneur Podman éphémère, supprimé après chaque commande par l'option `--rm`. Il utilise l'image `plasturgie-migrations`. Si elle n'existe pas, le script la construit depuis `dockerfile.migr` et `requirements.migr.txt`.
 
-Ce conteneur est relié au réseau Podman `faiveley_faiv-migrations`. Le réseau doit exister avant l'exécution ; il permet au conteneur de joindre PostgreSQL sans exposer la base au poste hôte.
+Ce conteneur est relié au réseau Podman `plasturgie_plast-migrations`. Le réseau doit exister avant l'exécution ; il permet au conteneur de joindre PostgreSQL sans exposer la base au poste hôte.
 
 Les dossiers de migration choisis et `src/common` sont montés dans le conteneur. Les fichiers de révision générés sont donc écrits directement dans le répertoire de travail local.
 

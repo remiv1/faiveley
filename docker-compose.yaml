@@ -1,7 +1,7 @@
 services:
   proxy:
     image: nginx:1.28-alpine
-    container_name: faiv-proxy
+    container_name: plast-proxy
     ports:
       - "8110:8080"
     environment:
@@ -18,7 +18,7 @@ services:
       - qualite
       - techniciens
     networks:
-      - faiv-network
+      - plast-network
     restart: on-failure:5
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/ || exit 1"]
@@ -27,18 +27,18 @@ services:
       retries: 3
 
   db-main:
-    container_name: faiv-db
+    container_name: plast-db
     build:
       context: .
       dockerfile: src/database/dockerfile.postgres
     env_file:
       - src/database/.env.postgres
     networks:
-      - faiv-network
-      - faiv-secure
-      - faiv-migrations
+      - plast-network
+      - plast-secure
+      - plast-migrations
     volumes:
-      - faiv-db-data:/var/lib/postgresql
+      - plast-db-data:/var/lib/postgresql
     restart: on-failure:5
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-postgres} -h localhost -p 5432 || exit 1"]
@@ -48,7 +48,7 @@ services:
       start_period: 30s
 
   production:
-    container_name: faiv-production
+    container_name: plast-production
     build:
       context: .
       dockerfile: src/apis/production/dockerfile.prod
@@ -69,11 +69,11 @@ services:
       db-main:
         condition: service_healthy
     networks:
-      - faiv-network
+      - plast-network
     restart: on-failure:5
 
   manutention:
-    container_name: faiv-manutention
+    container_name: plast-manutention
     build:
       context: .
       dockerfile: src/apis/manutention/dockerfile.manut
@@ -94,11 +94,11 @@ services:
       db-main:
         condition: service_healthy
     networks:
-      - faiv-network
+      - plast-network
     restart: on-failure:5
 
   techniciens:
-    container_name: faiv-techniciens
+    container_name: plast-techniciens
     build:
       context: .
       dockerfile: src/apis/technicians/dockerfile.tech
@@ -119,10 +119,10 @@ services:
       db-main:
         condition: service_healthy
     networks:
-      - faiv-network
+      - plast-network
     restart: on-failure:5
   qualite:
-    container_name: faiv-qualite
+    container_name: plast-qualite
     build:
       context: .
       dockerfile: src/apis/quality/dockerfile.quality
@@ -143,11 +143,11 @@ services:
       db-main:
         condition: service_healthy
     networks:
-      - faiv-network
+      - plast-network
     restart: on-failure:5
 
   dashboard:
-    container_name: faiv-dashboard
+    container_name: plast-dashboard
     build:
       context: .
       dockerfile: src/apis/dashbord/dockerfile.dashboard
@@ -168,18 +168,18 @@ services:
       db-main:
         condition: service_healthy
     networks:
-      - faiv-network
-      - faiv-secure
+      - plast-network
+      - plast-secure
     restart: on-failure:5
 
 volumes:
-  faiv-db-data:
+  plast-db-data:
     driver: local
 
 networks:
-  faiv-network:
+  plast-network:
     driver: bridge
-  faiv-secure:
+  plast-secure:
     driver: bridge
-  faiv-migrations:
+  plast-migrations:
     driver: bridge

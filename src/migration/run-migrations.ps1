@@ -7,8 +7,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$Network = "faveley_faiv-migrations"
-$Image = "faiveley-migrations"
+$Network = "faveley_plast-migrations"
+$Image = "plasturgie-migrations"
 $ProjectRoot = "/app"
 $HostProjectRoot = Split-Path -Parent $PSScriptRoot
 

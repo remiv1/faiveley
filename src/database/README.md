@@ -3,8 +3,8 @@
 ## Rôle
 
 Le service `db-main` fournit l'instance PostgreSQL utilisée par le POC. Il
-persiste les données dans le volume Docker `faiv-db-data` et rejoint les
-réseaux `faiv-network`, `faiv-secure` et `faiv-migrations`.
+persiste les données dans le volume Docker `plast-db-data` et rejoint les
+réseaux `plast-network`, `plast-secure` et `plast-migrations`.
 
 L'image est construite depuis `dockerfile.postgres`, basé sur
 `postgres:18-bookworm`. Elle initialise PostgreSQL en UTF-8 avec la locale
@@ -23,7 +23,7 @@ Les scripts générés sont exécutés lors de la première initialisation du vo
 - `05_secure_conf.sh` applique la configuration PostgreSQL ;
 - `99_cleanup.sh` nettoie les fichiers temporaires.
 
-Les scripts d'initialisation ne sont pas rejoués tant que le volume `faiv-db-data` existe. Toute modification de leur contenu doit donc être traitée par une migration pour une base déjà initialisée.
+Les scripts d'initialisation ne sont pas rejoués tant que le volume `plast-db-data` existe. Toute modification de leur contenu doit donc être traitée par une migration pour une base déjà initialisée.
 
 ## Bases et schémas
 

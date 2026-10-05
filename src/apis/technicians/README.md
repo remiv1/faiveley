@@ -21,7 +21,7 @@ Les écrans Flask sont actualisés avec HTMX. Le POC ne distribue pas encore de 
 
 ## Solution retenue pour la production
 
-La production publiera les événements métier dans Redis Streams. Le service techniciens consommera le flux `faiveley:production:events` avec le groupe `faiveley:techniciens`.
+La production publiera les événements métier dans Redis Streams. Le service techniciens consommera le flux `plasturgie:production:events` avec le groupe `plasturgie:techniciens`.
 
 Les événements utiles sont notamment :
 

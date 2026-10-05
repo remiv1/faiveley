@@ -1,6 +1,6 @@
-# Console d'administration du POC FaiveleyTech
+# Console d'administration du POC Plasturgie
 
-Cette console permet de gérer les comptes administrateurs et les paramètres du POC FaiveleyTech.
+Cette console permet de gérer les comptes administrateurs et les paramètres du POC Plasturgie.
 
 ## Accès et changement d'environnement
 

@@ -21,7 +21,7 @@ La liste des demandes est rechargée par les endpoints Flask lorsque l'écran es
 
 ## Solution retenue pour la production
 
-La production publiera les événements métier dans Redis Streams. La manutention consommera le flux `faiveley:production:events` avec le groupe `faiveley:manutention`.
+La production publiera les événements métier dans Redis Streams. La manutention consommera le flux `plasturgie:production:events` avec le groupe `plasturgie:manutention`.
 
 Les événements utiles sont notamment :
 
